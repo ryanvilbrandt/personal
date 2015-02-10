@@ -43,22 +43,30 @@ def roll_dice_no_ones(num_dice, diff, iterations=100000):
             count += 1
     return float(count)/iterations
 
-def calc_prob(num_dice, diff, l=[]):
+def calc_prob(num_dice, diff, dice_list=[]):
+    '''
+    @param int num_dice: The number of dice (d10) to simulate, 1 or greater
+    @param int diff: The difficulty of the check, from 2 to 10
+    @param l
+    '''
     if num_dice == 0:
-        r = check_roll(l, diff)     # 1 if success, 0 otherwise
-##        return min(1, max(0, r))    # success
+        r = check_roll(dice_list, diff)     # 1 if success, 0 otherwise
+        return min(1, max(0, r))    # success
 ##        return 1-min(1, max(0, r))  # fail
-        return min(1, max(0, -r))   # botch
+##        return min(1, max(0, -r))   # botch
     else:
-        return float(sum([calc_prob(num_dice-1,diff,l+[i])
-                          for i in xrange(1,11)]))/10
+        return float(
+            sum(
+                [calc_prob(num_dice-1,diff,dice_list+[i]) for i in xrange(1,11)]
+                )
+            )/10
 
 def calc_prob_alt(num_dice, diff, succ_count=0):
     if num_dice == 0:
-##        return min(5, max(4, succ_count))-4 # 1 if 5 successes, 0 otherwise
-##        return min(1, max(0, succ_count))   # 1 if success, 0 otherwise
-##        return 1-min(1, max(0, succ_count)) # 1 if fail, 0 otherwise
-        return min(1, max(0, -succ_count))  # 1 if botch, 0 otherwise
+##        return (1 if succ_count >= 5 else 0)  # 1 if 5 successes, 0 otherwise
+##        return (1 if succ_count >= 1 else 0)  # 1 if success, 0 otherwise
+##        return (1 if succ_count <= 0 else 0)  # 1 if fail, 0 otherwise
+        return (1 if succ_count = 0 else 0)   # 1 if botch, 0 otherwise
     else:
         l = []
         for i in xrange(1,11):
@@ -160,12 +168,18 @@ def stddev(l, m=None):
     return mean(stddev_l)**0.5
 
 
-a = []
-for i in xrange(100000):
-    a.append(RollnWoD(4+6+2+3))
+##a = []
+##for i in xrange(100000):
+##    a.append(RollnWoD(4+6+2+3))
 
-print_stats(a)
-print_graph(a,False,250)
+for dice in xrange(1, 11):
+    for diff in xrange(2, 11):
+        a = calc_prob(dice, diff)
+        print "{:.2%}\t".format(a),
+    print
+
+##print_stats(a)
+##print_graph(a,False,250)
 
 
 

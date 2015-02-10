@@ -15,7 +15,8 @@ from m to n, inclusive, with the weight towards the low end.'''
     # "Fold" the full triangle in half, so the probability
     # distribution goes from low-chance at m and stops at
     # high chance at n
-    if temp > n: temp = n*2-temp+1
+    if temp > n:
+        temp = n*2-temp+1
     # Flip the triangle so that the high chance is near m
     # and the low chance is near n
     return n-temp+m

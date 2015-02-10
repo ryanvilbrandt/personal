@@ -1,7 +1,7 @@
 import Tkinter, random
 import prime_spiral
 
-W,B,R=(255,255,255),(0,0,0),(255,0,0)
+W,B,R=(0,0,0),(100,100,100),(255,0,0)
 BITS = [W,R]    # empty, filled pixel color
 LEFT_EDGE = 0   # Spoof left edge of each row as empty or filled?
 RIGHT_EDGE = 0  # Spoof right edge of each row as empty or filled?
@@ -10,7 +10,7 @@ RANDOMIZE_RULES = False
 
 class App:
 
-    width = 300
+    width = 500
     height = width
     
     def __init__(self, t):

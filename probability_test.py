@@ -2,12 +2,22 @@ import random
 
 prob_list = [0,0,0,-14,-11,-8,-6,-4,-2,-1,0,1,2,3,5,7,10,13,17]
 
-def d(n,d,num_dice=1,DropLowest=False):
+def d(n, d, num_dice=1, DropLowest=False, min_roll=1):
+    '''
+    @param int n: Number of dice to roll.
+    @param int d: Type of dice to roll. '6' = d6
+    @param int num_dice: Number of times to roll sets of dice. Only needed when DropLowest = True
+                         If DropLowest = False, this is unused
+    @param bool DropLowest: If True, n dice of type d will be rolled num_dice times. The set with the lowest
+                            sum will be discarded.
+                            For 3.5 standard of 3d6 drop lowest, do d(1,6,num_dice=3,DropLowest=True)
+    @param int min_roll: Lower bound of dice. 'd' could be called upper bound. Default is 1.
+    '''
     if DropLowest:
-        return sum(sorted([sum([random.randint(1,d) for y in xrange(num_dice)])
+        return sum(sorted([sum([random.randint(min_roll,d) for y in xrange(num_dice)])
                            for x in xrange(n)])[1:])
     else:
-        return sum([random.randint(1,d) for x in xrange(n)])
+        return sum([random.randint(min_roll,d) for x in xrange(n)])
 
 def dice_Morgan(n,d):
     total = 0
@@ -108,7 +118,7 @@ samples = 1000000
 for n in xrange(samples):
     if n % (samples / 10) == 0:
         print n
-    results.append(rand_low_weight(1,5))
+    results.append(d(8, 2, DropLowest=True)+1)
 ##    print ""
 ##r = list(set(results))
 ##r.sort()

@@ -1,8 +1,8 @@
 import re, csv
 
 # based on the databases pulled from d20pfsrd.com
-MONSTER_DB = "monster_bestiary_partial.csv"
-NPC_DB = "monster_stat_blocks_full.csv"
+MONSTER_DB = "inputs/monster_bestiary_partial.csv"
+NPC_DB = "inputs/monster_stat_blocks_full.csv"
 
 def get_cmd(filename):
     hit_d = {}

@@ -22,12 +22,13 @@ def build_primes(max_n):
 def sieve(N):
     # Open primes_list.txt, if it exists
     try:
-        with open("primes_list.txt",'r') as f:
+        with open("primes_list.txt", 'r') as f:
             primes = eval(f.read())
     except Exception:
         primes = []
     # Check if more primes need to be calculated
     if not primes or max(primes) < N:
+        print "Building primes list"
         if primes:
             # Create number list starting AFTER the highest prime in primes
             nums = range(max(primes)+1, N)
@@ -39,18 +40,27 @@ def sieve(N):
             nums = filter(lambda x: x == i or x % i, nums)
 
         # Write new set of primes to primes_list.txt
-        with open("primes_list.txt",'w') as f:
+        with open("primes_list.txt", 'w') as f:
             f.write(repr(primes + nums))
         return primes + nums
     else:
         return primes
 
-def ifprime(n):
+def ifprime(n, fast=True):
+    '''
+    Fast mode only works on an ordered list of primes, and when
+    n is increasing incrementally with each call.
+    '''
     global prime_numbers
-    if n in prime_numbers:
-        return "X"
+    if fast:
+        if prime_numbers and n == prime_numbers[0]:
+            prime_numbers = prime_numbers[1:]
+            return "X"
     else:
-        return " "
+        if n in prime_numbers:
+            prime_numbers.pop(n)
+            return "X"
+    return " "
 
 def build_spiral(array_size):
     global prime_numbers

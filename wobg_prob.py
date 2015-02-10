@@ -38,34 +38,7 @@ spreads = {"Low": low_spread,
 ##        for n in total:
 ##            print n/float(sum(total))
 
-### Probability to hit given mods and different spreads
-##all_totals = []
-##for atk_key in ["Low", "Mid", "High"]:
-##    for dfs_key in ["Low", "Mid", "High"]:
-##        atk = spreads[atk_key]
-##        dfs = spreads[dfs_key]
-##        print ""
-##        print "Atk: {0}   Def: {1}".format(atk_key, dfs_key)
-##        this_total = []
-##        for mod in xrange(-8,9):
-##            total = 0
-##            count = 0
-##            for a in atk:
-##                for d in dfs:
-##                    if a-d+mod > 0:
-##                        total += 1
-##                    count += 1
-##            this_total.append(total/float(count))
-##        all_totals.append(this_total)
-##
-##for i,n in enumerate(all_totals[0]):
-##    for x in all_totals:
-##        print str(x[i]),
-##    print ""
-
-
-
-# Average damage given mods and different spreads
+# Probability to hit given mods and different spreads
 all_totals = []
 for atk_key in ["Low", "Mid", "High"]:
     for dfs_key in ["Low", "Mid", "High"]:
@@ -79,7 +52,8 @@ for atk_key in ["Low", "Mid", "High"]:
             count = 0
             for a in atk:
                 for d in dfs:
-                    total += max(a-d+mod,0)
+                    if a-d+mod > 0:
+                        total += 1
                     count += 1
             this_total.append(total/float(count))
         all_totals.append(this_total)
@@ -88,6 +62,32 @@ for i,n in enumerate(all_totals[0]):
     for x in all_totals:
         print str(x[i]),
     print ""
+
+
+
+# Average damage given mods and different spreads
+##all_totals = []
+##for atk_key in ["Low", "Mid", "High"]:
+##    for dfs_key in ["Low", "Mid", "High"]:
+##        atk = spreads[atk_key]
+##        dfs = spreads[dfs_key]
+##        print ""
+##        print "Atk: {0}   Def: {1}".format(atk_key, dfs_key)
+##        this_total = []
+##        for mod in xrange(-8,9):
+##            total = 0
+##            count = 0
+##            for a in atk:
+##                for d in dfs:
+##                    total += max(a-d+mod,0)
+##                    count += 1
+##            this_total.append(total/float(count))
+##        all_totals.append(this_total)
+##
+##for i,n in enumerate(all_totals[0]):
+##    for x in all_totals:
+##        print str(x[i]),
+##    print ""
 
 # Build list of all possible roll values
 ##spread = []

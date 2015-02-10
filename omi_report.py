@@ -10,52 +10,6 @@ url = "https://kra0457.zonarsystems.net/interface.php?username=zonar&password=fo
 # Deletes attributes from the system
 # Reassign attributes to the asset
 # Set custom fields
-urls = """
-https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminassets&operation=editgps&format=xml&reqtype=exsid&target=18745&gpsunit=
-https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminassets&operation=edit&format=xml&reqtype=dbid&version=2&target=1118&name=A006345&fleet=2510919&exsid=18745&location=25162005232&type=TRAILER&newtype=TRAILER&vin=MJE0390919&tagid=79600533&mfg=.&mileageoffset=0&engine_hour_offset=0&subtype=180-Trailers%20-%20Specialty&status=1
-https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=showopen&operation=showassets&format=xml&reqtype=dbid&target=1118
-"""
-#https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=list&format=xml&type=1&target=1118"""
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262297
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262318
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262316
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262310
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262312
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262300
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262295
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262298
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262296
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262299
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262301
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262303
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262309
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262311
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262305
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262314
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262302
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262308
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262313
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262304
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262315
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262307
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262317
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262319
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=delete&format=xml&target=262306
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=119&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=128&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=1180&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=443&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=545&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=984&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=48&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=1123&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=1124&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=51&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=77&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=1108&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminattributeassign&operation=add&format=xml&rtypeid=1&aid=1014&rid=1118
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminassets&operation=editcustomdata&format=xml&reqtype=exsid&labelid=3&target=18745&labelval=89%20Pole%2FMaterial%20Trl%20%20%20%20%20%20%20%20%20%20
-##https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&action=adminassets&operation=editcustomdata&format=xml&reqtype=exsid&labelid=4&target=18745&labelval=180-Pole%20Trl"""
 
 base_url = "https://qa1.zonarsystems.net/interface.php?customer=MJE0796&username=jde_integration&password=integrate1234&"
 att_assign = [119, 128, 1180, 443, 545, 984, 48, 1123, 1124, 51, 77, 1108, 1014]
@@ -126,22 +80,27 @@ def send_omi_call(url, operation):
     ##print d
 
 
-try:
-    for item in ["editgps", "edit", "list", "delete"]:
-        # Build URL
-        url = base_url+"&".join(["=".join(x) for x in arguments[item]])
-        # Send URL, if 'delete' then send one for every aid retrieved
-        if item == "delete":
-            for a in aid_list:
-                send_omi_call(url.format(a), item)
-        else:
-            result = send_omi_call(url, item)
-        # If 'list', save list of aids
-        if item == "list":
-            aid_list = result
-            print aid_list
-        print ""
-        time.sleep(1)
-except Exception as e:
-    print "Exception when trying to send: {0}".format(url)
-    print e
+operation = "add"
+url = base_url+"&".join(["=".join(x) for x in arguments[operation]])
+result = send_omi_call(url.format("1111"), item)
+print result
+
+##try:
+##    for item in ["editgps", "edit", "list", "delete"]:
+##        # Build URL
+##        url = base_url+"&".join(["=".join(x) for x in arguments[item]])
+##        # Send URL, if 'delete' then send one for every aid retrieved
+##        if item == "delete":
+##            for a in aid_list:
+##                send_omi_call(url.format(a), item)
+##        else:
+##            result = send_omi_call(url, item)
+##        # If 'list', save list of aids
+##        if item == "list":
+##            aid_list = result
+##            print aid_list
+##        print ""
+##        time.sleep(1)
+##except Exception as e:
+##    print "Exception when trying to send: {0}".format(url)
+##    print e

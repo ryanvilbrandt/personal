@@ -91,14 +91,13 @@ def stddev(l, m=None):
     stddev_l = [(m-n)**2 for n in l]
     return mean(stddev_l)**0.5
 
-def RunWeaponSim(n,dice,crit,mult):
+def RunWeaponSim(n,dice,crit,mult,bonus=0):
     ac = 10
     keen = False
     oncrit = (0,0,0) # {1}d{2}+{3} whenever you crit
     
     rounds = 300000
     brief = False
-    bonus = 0
     scale = 1
 
     if keen:
@@ -116,7 +115,8 @@ def RunWeaponSim(n,dice,crit,mult):
 ##    print_graph(l, brief, scale)
 ##    print_stats(l)
 ##    print "Total damage:",sum(l)
-    print_stats([x for x in l if x != 0])
+##    print_stats([x for x in l if x != 0])
+    print mean([x for x in l if x != 0])
 
 gc.disable() # Disable garbage collection
 t = time.clock()
@@ -137,19 +137,18 @@ t = time.clock()
 ##print "Broadsword 2d4 x2"
 ##RunWeaponSim(2,4,20,2)
 
-print ""
-print "Scimitar 1d6 18-20/x2"
-RunWeaponSim(1,6,18,2)
-
+##print ""
+##print "Scimitar 1d6 18-20/x2"
+##RunWeaponSim(1,6,18,2)
 ##
 ##print ""
-##print "Greataxe 1d12 x3"
-##RunWeaponSim(1,12,20,3)
-
-print ""
-print "Greatsword 2d6 19–20/x2"
-RunWeaponSim(2,6,19,2)
-
+##print "Greataxe 1d12 19-20/x3"
+##RunWeaponSim(1,12,19,3)
+##
+##print ""
+##print "Greatsword 2d6 17–20/x2"
+##RunWeaponSim(2,6,17,2)
+##
 ##print ""
 ##print "Greataxe (small) 1d10 x3"
 ##RunWeaponSim(1,10,20,3)
@@ -171,8 +170,8 @@ RunWeaponSim(2,6,19,2)
 ##RunWeaponSim(2,6,20,3)
 ##
 ##print ""
-##print "Falchion 2d4 18-20/x2"
-##RunWeaponSim(2,4,18,2)
+##print "Falchion 2d4 15-20/x2"
+##RunWeaponSim(2,4,15,2)
 ##
 ##print ""
 ##print "Pickaxe 1d8 x4"
@@ -205,6 +204,14 @@ RunWeaponSim(2,6,19,2)
 
 ##print mean([d(20,6) for i in xrange(100000)]), time.clock()-t
 ##print mean([dice(20,6) for i in xrange(100000)]), time.clock()-t
+
+print "Greataxe 1d12 19-20/x3"
+##print "Greatsword 2d6 17–20/x2"
+##print "Falchion 2d4 15-20/x2"
+for i in xrange(51):
+    RunWeaponSim(1,12,19,3,bonus=i)
+##    RunWeaponSim(2,6,17,2,bonus=i)
+##    RunWeaponSim(2,4,15,2,bonus=i)
 
 print ""
 print time.clock()-t
