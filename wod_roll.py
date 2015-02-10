@@ -47,17 +47,28 @@ def calc_prob(num_dice, diff, dice_list=[]):
     '''
     @param int num_dice: The number of dice (d10) to simulate, 1 or greater
     @param int diff: The difficulty of the check, from 2 to 10
-    @param l
+    @param list(int) dice_list: The list of dice results to check for success or fail
+
+    Recursively creates every possible combination of dice rolls, at the given number of dice.
+    Then analyzes each combination as a success, failure, or botch.
+    Returns the percentage of how many of those dice combinations were success/fail/botch.
     '''
     if num_dice == 0:
+        # If all the dice have been generated, run the roll through the checking
+        # function to get the number of successes in that roll.
         r = check_roll(dice_list, diff)     # 1 if success, 0 otherwise
         return min(1, max(0, r))    # success
 ##        return 1-min(1, max(0, r))  # fail
 ##        return min(1, max(0, -r))   # botch
     else:
+        
         return float(
             sum(
-                [calc_prob(num_dice-1,diff,dice_list+[i]) for i in xrange(1,11)]
+                [calc_prob(
+                    num_dice-1,
+                    diff,
+                    dice_list+[i]
+                    ) for i in xrange(1,11)]
                 )
             )/10
 
