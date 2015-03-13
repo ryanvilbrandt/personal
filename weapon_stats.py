@@ -3,18 +3,24 @@ import random, time, gc
 ##from scipy import weave
 ##from scipy.weave import converters
 
-def d(n,d):
+def d(n, d):
     return sum([random.randint(1,d) for i in xrange(n)])
 
-def dice(n,d,explode=[],min_roll=1):
+def dice(n, d, explode=[], min_roll=1):
     i = 0
-    t = 0
+    total = 0
+    # Go through n iterations
     while i < n:
-        r = max(random.randint(1,d),min_roll)
-        t += r
+        # Make a 1dD roll
+        # If rolled below min_roll, use min_roll instead
+        r = max(random.randint(1,d), min_roll)
+        total += r
+        # If you rolled a die in the "explode" category
+        # Do an extra iteration
+        # Otherwise, advance the iteration count
         if not (r in explode):
             i += 1
-    return t
+    return total
 
 def weapon_attack(n,dice,crit=20,mult=2,ac=10,bonus=0):
 ##    atk = weave.inline(dice_code,
@@ -205,13 +211,28 @@ t = time.clock()
 ##print mean([d(20,6) for i in xrange(100000)]), time.clock()-t
 ##print mean([dice(20,6) for i in xrange(100000)]), time.clock()-t
 
-print "Greataxe 1d12 19-20/x3"
-##print "Greatsword 2d6 17–20/x2"
-##print "Falchion 2d4 15-20/x2"
-for i in xrange(51):
-    RunWeaponSim(1,12,19,3,bonus=i)
-##    RunWeaponSim(2,6,17,2,bonus=i)
-##    RunWeaponSim(2,4,15,2,bonus=i)
+##print "Greataxe 1d12 19-20/x3"
+####print "Greatsword 2d6 17–20/x2"
+####print "Falchion 2d4 15-20/x2"
+##for i in xrange(51):
+##    RunWeaponSim(1,12,19,3,bonus=i)
+####    RunWeaponSim(2,6,17,2,bonus=i)
+####    RunWeaponSim(2,4,15,2,bonus=i)
+
+# Check the results of exploding dice
+iters = 10000
+roll_list = [(1, 4), (1, 6), (1, 8), (1, 10), (1, 12),
+             (2, 4), (2, 6), (2, 8), (2, 10), (2, 12),
+             (3, 4), (3, 6), (3, 8), (3, 10), (3, 12),
+             ]
+
+for roll in roll_list:
+    a = [dice(roll[0], roll[1], [roll[1]-1, roll[1]]) for i in xrange(100000)]
+    print "{}d{}".format(roll[0], roll[1])
+##    print_graph(a)
+    print_stats(a)
+    print ""
+
 
 print ""
 print time.clock()-t

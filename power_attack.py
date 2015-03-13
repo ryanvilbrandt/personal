@@ -390,20 +390,29 @@ class MyFrame(wx.Frame):
                 str_dmg = int(str_dmg*0.5)
             can_crit = not self.ImmuneCritsCheckbox.GetValue()
             
+            # Perform a calculation of average damage for each visible AC value
+            # Do two calculations, with Power Attack and without Power Attack
             for i,x in enumerate(self.TargetACList):
                 ac = target_ac-int(len(self.TargetACList)/2)+i
                 x.SetLabel(str(ac))
-                    
+                
+                # Create a list of average damage results without power attack
                 no_dmg_list = self.CalcAvgDmg(bab, hit_mod+str_mod, ac, weap+str_dmg, add_dmg, dmg_mult, crit_range, crit_mult, 
                                               can_crit, extra_crit_dmg, crit_conf_bonus, target_dr, 0, extra_hits, full_attack)
-                no_dmg = sum(no_dmg_list)#/float(len(no_dmg_list))
+                # Sum all the damage
+                no_dmg = sum(no_dmg_list)
+                # Set result for the given AC
                 self.PANoList[i].SetLabel("{0:.2f}".format(no_dmg))
                 
+                # Create a list of average damage results with power attack
                 yes_dmg_list = self.CalcAvgDmg(bab, hit_mod+str_mod-hit_penalty, ac, weap+str_dmg+dmg_bonus, add_dmg, dmg_mult, crit_range, crit_mult, 
                                                can_crit, extra_crit_dmg, crit_conf_bonus, target_dr, furious_focus_mod, extra_hits, full_attack)
-                yes_dmg = sum(yes_dmg_list)#/float(len(yes_dmg_list))
+                # Sum all the damage
+                yes_dmg = sum(yes_dmg_list)
+                # Set result for the given AC
                 self.PAYesList[i].SetLabel("{0:.2f}".format(yes_dmg))
                 
+                # Highlight the greater result in light blue, and the lesser result in white
                 if yes_dmg > no_dmg:
                     self.PANoList[i].SetBackgroundColour("White")
                     self.PAYesList[i].SetBackgroundColour("Light Blue")
@@ -420,34 +429,53 @@ class MyFrame(wx.Frame):
             self.Refresh()
         
     def CalcHitProb(self, tohit, ac):
-#        print tohit,ac
         temp = min(20,max(1,ac-tohit-1))
-#        print temp
         return 1-(temp/20.0)
 
     def CalcAvgDmg(self, bab, hit_mod, ac, dmg, add_dmg=0, dmg_mult=1, crit_range=20, crit_mult=2, can_crit=True, extra_crit_dmg=0, 
                    crit_conf_bonus=0, dr=0, furious_focus_mod=0, extra_hits=0, full_attack=True):
         if DEBUG: print bab,hit_mod,dmg,add_dmg,dmg_mult
+        # Calculate the probability of hitting, given the AC of the target, and the BAB and hit mod of the attacker
         hit_prob = self.CalcHitProb(bab+hit_mod+furious_focus_mod, ac)
         if DEBUG: print "Hit prob:",hit_prob
-        avg_dmg = hit_prob*((dmg)*dmg_mult+add_dmg)
+        # Total damage is the average weapon damage times damage mult, plus additional
+        total_dmg = (dmg)*dmg_mult+add_dmg
+        # Multiply total damage by the hit probability to get the average damage 
+        avg_dmg = hit_prob*total_dmg
         if DEBUG: print "Avg dmg:",avg_dmg
         if can_crit:
-            crit_hit_prob = self.CalcHitProb(bab+hit_mod+furious_focus_mod+crit_conf_bonus, ac)
+            # Calculate the chance of a crit threat. If the hit probability is lower, use that instead
+            # i.e. Rolling an 18 with a rapier when you need a 19 to normally hit is still a miss
+            # Only a natural 20 is a guaranteed hit
             crit_chance = min(hit_prob,(21-crit_range)/20.0)
-            crit_dmg = crit_hit_prob*crit_chance*((dmg_mult+crit_mult-2)*dmg+extra_crit_dmg)
+            # Calculate the crit confirmation chance. This is the same as the hit chance, except
+            # with possibly crit confirmation bonuses 
+            crit_hit_prob = self.CalcHitProb(bab+hit_mod+furious_focus_mod+crit_conf_bonus, ac)
+            # Find the additional damage added by a crit (x2 crit means adding 1*average damage)
+            # Add extra crit damage as well
+            crit_dmg = (crit_mult-1)*avg_dmg+extra_crit_dmg
+            # Find average crit damage by multiplying by crit chance and crit confirmation chance
+            avg_crit_dmg = crit_hit_prob*crit_chance*crit_dmg
         else:
-            crit_dmg = 0
-        if DEBUG: print "Crit dmg:",crit_dmg
-        avg_dmg_list = [max(avg_dmg+crit_dmg-dr,0)]
-        if DEBUG: print "Dmg:",avg_dmg_list
+            # If the attack can't crit, just set average crit damage to 0
+            avg_crit_dmg = 0
+        if DEBUG: print "Crit dmg:",avg_crit_dmg
+        # Start a new damage list for this attack
+        avg_dmg_list = [max(avg_dmg+avg_crit_dmg-dr,0)]
+        if DEBUG: print "Dmg:",avg_dmg_list 
+        # Call this function again recursively, and add further results to the damage list
         if extra_hits > 0:
+            # If the attacker gets extra hits (like from Haste) perform the calculations again without reducing BAB.
+            # However, any bonus added by furious focus goes away for any further attacks.
             avg_dmg_list += self.CalcAvgDmg(bab, hit_mod, ac, dmg, add_dmg, dmg_mult, crit_range, crit_mult, can_crit, extra_crit_dmg, 
                                             crit_conf_bonus, dr, 0, extra_hits-1, full_attack)
         elif full_attack:
+            # If full attacking and the BAB is still greater than 5, more attacks can be made.
+            # Reduce BAB by 5 and perform the calculations again.
             if bab > 5:
                 avg_dmg_list += self.CalcAvgDmg(bab-5, hit_mod, ac, dmg, add_dmg, dmg_mult, crit_range, crit_mult, can_crit, extra_crit_dmg,
                                                 crit_conf_bonus, dr)
+        # Return damage list, to either be appended to other lists or returned to the main function to be averaged
         return avg_dmg_list
 
     def ErrorDialog(self, e):

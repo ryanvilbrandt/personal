@@ -2,17 +2,17 @@ import urllib, urllib2, time
 import xml.etree.ElementTree as ET
 
 USERNAME = "zonar"
-PASSWORD = "kyle=255"
+PASSWORD = "hexagon..9"
 SERVER = "hosdemo"
 ACCOUNT = "dbr47_rep1023"
-DRIVER_ID = "6433"
-PROVIDER = "May"
-FORM = 10
+DRIVER_ID = "3"
+PROVIDER = "MCleod"
+FORM = 0
 # Set values here to control the behavior of the script below
 INBOUND, INBOUND_DATA, OUTBOUND, ACK, TEST = 0, 1, 2, 3, 4
-DIRECTION = INBOUND
+##DIRECTION = INBOUND
 ##DIRECTION = INBOUND_DATA
-##DIRECTION = OUTBOUND
+DIRECTION = INBOUND
 ##DIRECTION = ACK
 ##DIRECTION = TEST
 # Time interval from present to check for outbound/ack messages
@@ -27,7 +27,8 @@ def fill(num):
     Useful for determining if the 2020 form can hold the max length of characters.
     '''
 ##    return "W"*num+"~~"
-    return "".join([str(i % 10) for i in xrange(num)])+"~~"
+##    return "".join([str(i % 10) for i in xrange(num)])+"~~"
+    return ""
 
 inbound_url_template = ("https://{server}.zonarsystems.net/interface.php?username={username}&password={password}"+
                         "&action=twentytwenty&operation=sendmessage&format=xml&version=2&target={driver_id}"+
@@ -44,33 +45,33 @@ ack_url_template = ("https://{server}.zonarsystems.net/interface.php?username={u
                     "&start={start}&provider={provider}")
 
 # FromDispatch data sets, for Inbound messages
-##forms = {0: ["Python test to ryan"],
-##         1: [fill(12), fill(8), fill(24), fill(22), fill(29), fill(38), fill(12), fill(5), fill(5), fill(5), fill(5),
-##             fill(29), fill(38), fill(4), fill(5), fill(2), fill(2), fill(2), fill(22), fill(29), fill(38), fill(12),
-##             fill(5), fill(5), fill(5), fill(5), fill(38), fill(4), fill(38), fill(38), fill(38), fill(38)],
-####         1: [fill(12), fill(8), fill(24), fill(22), fill(29), fill(38),
-####             fill(20), "Jan01", "00:00", "Dec31", "23:59", fill(29), fill(38), "15kg", "35lbs",
-####             "99", "00", "11", fill(22), fill(29), fill(38), fill(20), "Jan01", "00:00",
-####             "Dec31", "23:59", fill(38), "1234",
-####             fill(38), fill(38), fill(38), fill(38)],
-##         2: [fill(10), fill(2), fill(30), fill(24), fill(2), fill(5), fill(5), fill(5), fill(5), fill(30), fill(28), fill(24),
-##             fill(2), fill(5), fill(5), fill(5), fill(5), fill(4), fill(4)],
-####         2: ["Butt Dimes", "22", "Ship My Tookus - International", "Istanbul, not Constantinople", "WA", "Jan01", "00:00",
-####             "Dec31", "23:59", "Hickory smoked horse buttholes", "IIiiII Will Always Love Yooou!", "Actually Constantinople!", "XX", 
-####             "Jan01", "00:00", "Dec31", "23:59", "9999", "0000"],
-##         3: [fill(26), fill(4), fill(5), fill(5), fill(30), fill(38), fill(29), fill(38)],
-##         4: [fill(10)],
-##         5: [fill(26), fill(10), fill(10), fill(35), fill(10), fill(5), fill(5), fill(24), fill(2)],
-##         6: [fill(29), fill(30), fill(24), fill(2), fill(12), fill(38), fill(38), fill(38), fill(38)],
-##         7: [fill(10), fill(11), fill(5), fill(8), fill(8), fill(4), fill(4)],
-##         8: [fill(30), fill(3), fill(22), fill(29), fill(38)],
-##         9: [fill(10), fill(7), "3", fill(34), "N", fill(23), fill(29), fill(38)],
-##         10: [fill(32), fill(28), fill(8)],
-##         11: [""],
-####         12: [fill(5), fill(5), fill(6), fill(24), fill(2), fill(31), fill(38)],
-##         12: [fill(5), fill(5), fill(5), fill(5), fill(5), fill(5), fill(5)],
-##         }
-forms = {10: [""]}
+forms = {0: ["Python test to Clint"],
+         1: [fill(12), fill(8), fill(24), fill(22), fill(30), fill(29), fill(38), fill(12), fill(5), fill(5), fill(5), fill(5),
+             fill(29), "Y", fill(4), fill(5), fill(2), fill(3), fill(4), fill(22), fill(29), fill(38), fill(12),
+             fill(5), fill(5), fill(5), fill(5), "Y", fill(4), fill(38), fill(38), fill(38), fill(38)],
+##         1: [fill(12), fill(8), fill(24), fill(22), fill(29), fill(38),
+##             fill(20), "Jan01", "00:00", "Dec31", "23:59", fill(29), fill(38), "15kg", "35lbs",
+##             "99", "00", "11", fill(22), fill(29), fill(38), fill(20), "Jan01", "00:00",
+##             "Dec31", "23:59", fill(38), "1234",
+##             fill(38), fill(38), fill(38), fill(38)],
+         2: [fill(10), fill(2), fill(30), fill(24), fill(2), fill(5), fill(5), fill(5), fill(5), fill(30), fill(28), fill(24),
+             fill(2), fill(5), fill(5), fill(5), fill(5), fill(4), fill(4)],
+##         2: ["Butt Dimes", "22", "Ship My Tookus - International", "Istanbul, not Constantinople", "WA", "Jan01", "00:00",
+##             "Dec31", "23:59", "Hickory smoked horse buttholes", "IIiiII Will Always Love Yooou!", "Actually Constantinople!", "XX", 
+##             "Jan01", "00:00", "Dec31", "23:59", "9999", "0000"],
+         3: [fill(26), fill(4), fill(5), fill(5), fill(30), fill(38), fill(29), fill(38)],
+         4: [fill(10)],
+         5: [fill(26), fill(10), fill(10), fill(35), fill(10), fill(5), fill(5), fill(24), fill(2)],
+         6: [fill(29), fill(30), fill(24), fill(2), fill(12), fill(38), fill(38), fill(38), fill(38)],
+         7: [fill(10), fill(11), fill(5), fill(8), fill(8), fill(4), fill(4)],
+         8: [fill(30), fill(3), fill(22), fill(29), fill(38)],
+         9: [fill(10), fill(7), "3", fill(34), "N", fill(23), fill(29), fill(38)],
+         10: [fill(32), fill(28), fill(8)],
+         11: [""],
+##         12: [fill(5), fill(5), fill(6), fill(24), fill(2), fill(31), fill(38)],
+         12: [fill(5), fill(5), fill(5), fill(5), fill(5), fill(5), fill(5)],
+         }
+##forms = {10: [""]}
 
 def SendHttpMessage(url, data=None, proxy=None):
 ##    print url

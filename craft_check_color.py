@@ -51,3 +51,4 @@ for j in range(m*n):
     print j+1,
 
 plt.show()
+print help(plt.savefig)
