@@ -9,7 +9,7 @@ import wx                           # http://www.wxpython.org/
 import serial                       # http://pyserial.sourceforge.net/
 
 # Process command line arguments
-DEBUG = True
+DEBUG = False
 #print sys.argv
 if "-debug" in sys.argv:
     DEBUG = True
@@ -43,7 +43,7 @@ class MyFrame(wx.Frame):
 
     def InitGUI(self):
 #        self.SetMinSize((340, 228))
-        self.SetSize(wx.Size(550, 575))
+        self.SetSize(wx.Size(550, 600))
 
         p = wx.Panel(self)
         
@@ -88,6 +88,9 @@ class MyFrame(wx.Frame):
         self.AvgWeaponDmgCtrl.SetValue("0")
         self.AvgWeaponDmgCtrl.Bind(wx.EVT_SET_FOCUS, self.OnGainFocusTB)
         self.AvgWeaponDmgCtrl.Bind(wx.EVT_TEXT, self.BuildTable)
+        
+        self.ExplodeCtrl = wx.SpinCtrl(p, value="0", min=0, max=5, size=(50,-1))
+        self.ExplodeCtrl.Bind(wx.EVT_TEXT, self.ParseAvgWeaponDmg)
         
         self.AddDmgCtrl = wx.TextCtrl(p, value="", size=(80,-1))
         self.AddDmgCtrl.Bind(wx.EVT_SET_FOCUS, self.OnGainFocusTB)
@@ -176,7 +179,7 @@ class MyFrame(wx.Frame):
         controlsSizer.Add(wx.StaticText(p, label="Strength Score:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | wx.ALL, 3)
         hsizer_strmod = wx.BoxSizer(wx.HORIZONTAL)
         hsizer_strmod.Add(self.StrengthScoreCtrl, 0, wx.ALIGN_CENTER_VERTICAL)
-        hsizer_strmod.Add(wx.StaticText(p, label="Avg"), 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 30)
+        hsizer_strmod.Add(wx.StaticText(p, label="Bonus:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 30)
         hsizer_strmod.Add(self.StrengthModCtrl, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 6)
         controlsSizer.Add(hsizer_strmod, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT | wx.ALL, 3)
         controlsSizer.Add(wx.StaticText(p, label="Additional Modifiers:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | wx.ALL, 3)
@@ -195,12 +198,15 @@ class MyFrame(wx.Frame):
         hsizer0.Add(wx.StaticText(p, label="(at highest base attack bonus)"), 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 5)
         controlsSizer.Add(hsizer0, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT | wx.ALL, 3)
         
-        controlsSizer.Add(wx.StaticText(p, label="Normal Weapon Dmg:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | wx.ALL, 3)
+        controlsSizer.Add(wx.StaticText(p, label="Weapon Damage Dice:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | wx.ALL, 3)
         hsizer1 = wx.BoxSizer(wx.HORIZONTAL)
         hsizer1.Add(self.WeaponDmgCtrl, 0, wx.ALIGN_CENTER_VERTICAL)
         hsizer1.Add(wx.StaticText(p, label="Avg"), 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 30)
         hsizer1.Add(self.AvgWeaponDmgCtrl, 0, wx.ALIGN_CENTER_VERTICAL | wx.LEFT, 6)
         controlsSizer.Add(hsizer1, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT | wx.ALL, 3)
+        
+        controlsSizer.Add(wx.StaticText(p, label="Exploding range:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | wx.ALL, 3)
+        controlsSizer.Add(self.ExplodeCtrl, 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_LEFT | wx.ALL, 3)
         
         controlsSizer.Add(wx.StaticText(p, label="Additional Dmg:"), 0, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT | wx.ALL, 3)
         hsizer2 = wx.BoxSizer(wx.HORIZONTAL)
@@ -297,7 +303,7 @@ class MyFrame(wx.Frame):
             self.AvgAddModCtrl.SetValue(str(avg))
     
     def ParseAvgWeaponDmg(self, event):
-        avg = self.ParseAvgDmg(self.WeaponDmgCtrl.GetValue())
+        avg = self.ParseAvgDmg(self.WeaponDmgCtrl.GetValue(), explode=int(self.ExplodeCtrl.GetValue()))
         if not avg == None:
             self.AvgWeaponDmgCtrl.SetValue(str(avg))
     
@@ -316,24 +322,25 @@ class MyFrame(wx.Frame):
         if not avg == None:
             self.AvgCritConfBonusCtrl.SetValue(str(avg))
     
-    def ParseAvgDmg(self, s):
+    def ParseAvgDmg(self, s, explode=0):
         if s == "":
             return 0
         regex = r"(\d*d\d+)" # Matches "d8", "12d6", "1d20", etc
         m = re.findall(regex, s)
         for x in set(m):
-            s = s.replace(x,str(self.CalcDiceAvg(x)))
+            s = s.replace(x, str(self.CalcDiceAvg(x, explode=explode)))
         return self.safe_eval(s)
     
-    def CalcDiceAvg(self, s):
+    def CalcDiceAvg(self, s, explode=0):
         n,p,d = s.partition('d')
         try:
-            if n == "": n = 1
+            if n == "":
+                n = 1
             n = int(n)
             d = int(d)
         except ValueError:
             return 0
-        return ((d+1)/2.0)*n 
+        return ((d+1)/(2.0*(d-explode)))*d*n 
     
     def safe_eval(self, func):
         try:
