@@ -78,14 +78,14 @@ def PickRandomItem(array):
     else:
         return pick
 
-def RollStats(n=3, d=6, iters=6, drop_lowest=False):
+def RollStats(n=4, d=4, iters=6, drop_lowest=True, bonus=4):
     # Build a list of stats
     stats = []
     for _ in xrange(iters):
         # Roll n dice, each with d-sides
         dice_results = [random.randint(1, d) for i in xrange(n)]
         # Sum the results
-        total = sum(dice_results)
+        total = sum(dice_results)+bonus
         if drop_lowest:
             # Drop the lowest roll
             total -= min(dice_results)
@@ -93,23 +93,35 @@ def RollStats(n=3, d=6, iters=6, drop_lowest=False):
         stats.append(str(total))
     return ", ".join(stats)
 
-##print RollStats()
-##print "{}, {}, {}".format(
-##    PickRandomItem(races),
-##    PickRandomItem(classes),
-##    PickRandomItem(backgrounds)
-##    )
-##print "Specialty: {}, Personality: {}".format(
-##    random.randint(1,8),
-##    random.randint(1,8)
-##    )
-##print "Ideal: {}, Bond: {}, Flaw: {}".format(
-##    random.randint(1,6),
-##    random.randint(1,6),
-##    random.randint(1,6)
-##    )
+def DistributeStats(n=12, starting_value=9):
+    '''
+    All ability scores start at 9. Roll n dice.
+    Add +1 to the score depending on the die roll.
+    '''
+    array_size = 6
+    starting_array = [starting_value]*array_size
+    for i in xrange(n):
+        starting_array[random.randint(0,array_size-1)] += 1
+    return ", ".join([str(s) for s in starting_array])
 
-try:
-    unittest.main()
-except SystemExit:
-    pass
+print RollStats()
+##print DistributeStats()
+print "{}, {}, {}".format(
+    PickRandomItem(races),
+    PickRandomItem(classes),
+    PickRandomItem(backgrounds)
+    )
+print "Specialty: {}, Personality: {}".format(
+    random.randint(1,8),
+    random.randint(1,8)
+    )
+print "Ideal: {}, Bond: {}, Flaw: {}".format(
+    random.randint(1,6),
+    random.randint(1,6),
+    random.randint(1,6)
+    )
+
+##try:
+##    unittest.main()
+##except SystemExit:
+##    pass
