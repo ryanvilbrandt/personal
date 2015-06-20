@@ -60,7 +60,7 @@ class MyFrame(wx.Frame):
 
         self.StrengthScoreCtrl = wx.TextCtrl(p, value="10", size=(80,-1))
         self.StrengthScoreCtrl.Bind(wx.EVT_SET_FOCUS, self.OnGainFocusTB)
-        self.StrengthScoreCtrl.Bind(wx.EVT_TEXT, self.ParseStrMod)
+##        self.StrengthScoreCtrl.Bind(wx.EVT_TEXT, self.ParseStrMod)
         self.StrengthModCtrl = wx.TextCtrl(p, value="0", size=(40,-1), style=wx.TE_READONLY)
         self.StrengthModCtrl.Bind(wx.EVT_SET_FOCUS, self.OnGainFocusTB)
         self.StrengthModCtrl.Bind(wx.EVT_TEXT, self.BuildTable)
@@ -157,8 +157,8 @@ class MyFrame(wx.Frame):
         self.ImmuneCritsCheckbox.Bind(wx.EVT_CHECKBOX, self.BuildTable)
 #        self.ImmuneCritsCheckbox.Disable()
         
-        normalFont = wx.Font(10, wx.NORMAL, wx.NORMAL, wx.NORMAL)
-        boldFont = wx.Font(10, wx.NORMAL, wx.NORMAL, wx.BOLD)
+        normalFont = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.NORMAL)
+        boldFont = wx.Font(10, wx.FONTFAMILY_DEFAULT, wx.NORMAL, wx.BOLD)
         self.TargetACList = [wx.StaticText(p, label="X", style=wx.ALIGN_CENTER | wx.ST_NO_AUTORESIZE, size=wx.Size(40,20)) for i in xrange(AC_COLUMNS)]
         for x in self.TargetACList:
             x.SetFont(boldFont)
@@ -490,7 +490,9 @@ class MyFrame(wx.Frame):
         dial.ShowModal()
     
     def OnGainFocusTB(self, event):
-        wx.CallAfter(event.GetEventObject().SelectAll)
+        pass
+##        event.GetEventObject().SelectAll()
+##        wx.CallAfter(event.GetEventObject().SelectAll)
     
     def OnClose(self, event):
         self.Destroy()

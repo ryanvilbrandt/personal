@@ -12,8 +12,8 @@ from struct import unpack
 REPR, Hex, HEX, oldhex, FANCY = 0, 1, 2, 3, 4
 FANCY_LENGTH = 24
 
-PORT1 = "COM3"
-PORT2 = "COM23"
+PORT1 = "COM4"
+PORT2 = "COM8"
 BAUD = 38400
 TIMEOUT = 0.02
 MODE = FANCY
