@@ -19,7 +19,7 @@ class TestRollStats(unittest.TestCase):
 
     def test_rollstats_four_dice(self):
         result = ", ".join(["12"]*6)
-        self.assertEqual(RollStats(4), result)
+        self.assertEqual(RollStats(n=5), result)
 
     def test_rollstats_8_stats(self):
         result = ", ".join(["9"]*8)
@@ -27,7 +27,7 @@ class TestRollStats(unittest.TestCase):
 
     def test_rollstats_4d6_drop_lowest(self):
         result = ", ".join(["9"]*6)
-        self.assertEqual(RollStats(4, drop_lowest=True), result)
+        self.assertEqual(RollStats(n=4, drop_lowest=True), result)
 
 races = [
     ['Hill Dwarf', 'Mountain Dwarf'],
@@ -66,11 +66,6 @@ backgrounds = ['Acolyte', 'Charlatan', 'Criminal', 'Entertainer', 'Folk Hero',
                'Guild Artisan', 'Hermit', 'Noble', 'Outlander', 'Sage',
                'Sailor', 'Soldier', 'Urchin']
 
-def RollStats_test():
-    assertEqual(random.randint(1, 6), 3)
-    
-    print "Tests passed"
-
 def PickRandomItem(array):
     pick = random.choice(array)
     if isinstance(pick, list):
@@ -78,7 +73,7 @@ def PickRandomItem(array):
     else:
         return pick
 
-def RollStats(n=4, d=4, iters=6, drop_lowest=True, bonus=4):
+def RollStats(n=4, d=6, iters=6, drop_lowest=True, bonus=0):
     # Build a list of stats
     stats = []
     for _ in xrange(iters):
@@ -101,27 +96,29 @@ def DistributeStats(n=12, starting_value=9):
     array_size = 6
     starting_array = [starting_value]*array_size
     for i in xrange(n):
-        starting_array[random.randint(0,array_size-1)] += 1
+        starting_array[random.randint(0, array_size-1)] += 1
     return ", ".join([str(s) for s in starting_array])
 
-print RollStats()
-##print DistributeStats()
-print "{}, {}, {}".format(
-    PickRandomItem(races),
-    PickRandomItem(classes),
-    PickRandomItem(backgrounds)
-    )
-print "Specialty: {}, Personality: {}".format(
-    random.randint(1,8),
-    random.randint(1,8)
-    )
-print "Ideal: {}, Bond: {}, Flaw: {}".format(
-    random.randint(1,6),
-    random.randint(1,6),
-    random.randint(1,6)
-    )
+def main():
+    print RollStats()
+    ##print DistributeStats()
+    print "{}, {}, {}".format(
+        PickRandomItem(races),
+        PickRandomItem(classes),
+        PickRandomItem(backgrounds)
+        )
+    print "Specialty: {}, Personality: {}".format(
+        random.randint(1, 8),
+        random.randint(1, 8)
+        )
+    print "Ideal: {}, Bond: {}, Flaw: {}".format(
+        random.randint(1, 6),
+        random.randint(1, 6),
+        random.randint(1, 6)
+        )
 
-##try:
-##    unittest.main()
-##except SystemExit:
-##    pass
+main()
+# try:
+#    unittest.main()
+# except SystemExit:
+#    pass

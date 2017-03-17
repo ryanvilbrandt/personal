@@ -472,11 +472,10 @@ def PickMajorPotion():
 
 def PickPotion(t):
     potion = t[GetFromTable(t)]
-    if potion[1]:
-        html = "http://www.d20pfsrd.com/magic/all-spells/"+potion[0][0].lower()+"/"+potion[1].lower().replace(',','').replace("'",'-').replace(' ','-')
-    else:
-        html = "http://www.d20pfsrd.com/magic/all-spells/"+potion[0][0].lower()+"/"+potion[0].lower().replace(',','').replace("'",'-').replace(' ','-')
-    print "{0} of {1} ({2:,} gp + material cost)\n{3}".format(potion[3], potion[0], potion[2], html)
+    name = potion[1] if potion[1] else potion[0]
+    html = ("http://www.d20pfsrd.com/magic/all-spells/" + name[0].lower() +
+            "/" + name.lower().replace(',','').replace("'",'-').replace(' ','-'))
+    print "{} of {} ({:,} gp + material cost)\n{}".format(potion[3], potion[0], potion[2], html)
     print "A character may make a Perception check (DC 15+spell level) to sample the potion and determine what it is. Increase the DC for rarer spells."
 
 def PickMinorRing():

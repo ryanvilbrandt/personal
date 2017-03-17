@@ -2,7 +2,7 @@ import sys, time
 
 MEM_ARRAY_SIZE = 16
 MEM_BITS = 8
-VERBOSE = True
+VERBOSE = False
 PRINT_CHAR = False
 
 def print_code(in_str, codeptr, dataptr, mem, iters):
@@ -32,7 +32,7 @@ def main(in_str):
             if PRINT_CHAR:
                 sys.stdout.write(repr(chr(mem[dataptr])))
             else:
-                sys.stdout.write(mem[dataptr])
+                sys.stdout.write(str(mem[dataptr]))
         elif in_str[codeptr] == ",":
             req = None
             print "\nGive me one byte of input, use quotes for a char: "
@@ -92,8 +92,8 @@ def main(in_str):
         codeptr += 1
 
 if __name__ == "__main__":
-##    in_str = "Addition ,>,<[>>+<<-]>[>+<-]>."
-    in_str = "Multiplication ,>,<[>[>+>+<<-]>[<+>-]<<-]>>>."
+    in_str = "Addition ,>,[-<+>]<."
+    # in_str = "Multiplication ,>,<[>[>+>+<<-]>[<+>-]<<-]>>>."
 ##    in_str = "Factorial ,[->+>+<<]>>->>+<<<[>[<[->[-<<+>>>+<]>[-<+>]<<]<[->+<]>>-]<.>>>-]>>>[.-]"
     ##in_str = "++++[.-]"
 

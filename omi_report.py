@@ -85,22 +85,22 @@ url = base_url+"&".join(["=".join(x) for x in arguments[operation]])
 result = send_omi_call(url.format("1111"), item)
 print result
 
-##try:
-##    for item in ["editgps", "edit", "list", "delete"]:
-##        # Build URL
-##        url = base_url+"&".join(["=".join(x) for x in arguments[item]])
-##        # Send URL, if 'delete' then send one for every aid retrieved
-##        if item == "delete":
-##            for a in aid_list:
-##                send_omi_call(url.format(a), item)
-##        else:
-##            result = send_omi_call(url, item)
-##        # If 'list', save list of aids
-##        if item == "list":
-##            aid_list = result
-##            print aid_list
-##        print ""
-##        time.sleep(1)
-##except Exception as e:
-##    print "Exception when trying to send: {0}".format(url)
-##    print e
+try:
+    for item in ["editgps", "edit", "list", "delete"]:
+        # Build URL
+        url = base_url+"&".join(["=".join(x) for x in arguments[item]])
+        # Send URL, if 'delete' then send one for every aid retrieved
+        if item == "delete":
+           for a in aid_list:
+               send_omi_call(url.format(a), item)
+        else:
+           result = send_omi_call(url, item)
+        # If 'list', save list of aids
+        if item == "list":
+           aid_list = result
+           print aid_list
+        print ""
+        time.sleep(1)
+except Exception as e:
+   print "Exception when trying to send: {0}".format(url)
+   print e

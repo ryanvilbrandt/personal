@@ -39,7 +39,7 @@ class App:
         print "Converting to colors..."
         bitmap = [[str(BITS[b]) for b in line]
                   for line in bitmap]
-        print bitmap
+        # print bitmap
         print "Painting bitmap..."
         self.PaintBitmap(bitmap)
 
@@ -63,7 +63,7 @@ class App:
             # For bits at the beginning of lines,
             # fake an upper left bit as empty
             # if LEFT_EDGE is 0
-            i = (y-1)*self.width
+            i = (y - 1) * self.width
             b.append(self.GetRule(LEFT_EDGE,
                                   bitmap[-1][0],
                                   bitmap[-1][1]))
@@ -83,23 +83,29 @@ class App:
         return bitmap
 
     def GetRule(self, a, b, c):
-        return self.rules[(a<<2) + (b<<1) + c]
+        return self.rules[(a << 2) + (b << 1) + c]
 
     def RandomizeRules(self):
-        self.rules = [random.randint(0,1) for i in xrange(8)]
+        self.rules = [random.randint(0, 1) for i in xrange(8)]
 
     def PaintBitmap(self, bitmap):
         row = 0
         col = 0
         for bit in bitmap:
-            print bit
-            self.i.put("{" + " ".join(bit) + "}")
-##           self.i.put('#%02x%02x%02x' % tuple(bit),(col,row))
-##           col += 1
-##           if col == self.width:
-##               if row % 100 == 0:
-##                   print "{0:.0%} ({1}/{2} rows)".format(row/float(self.height),row,self.height)
-##               row +=1; col = 0        
+            # print bit
+            # try:
+            #     self.i.put("{" + " ".join(bit) + "}")
+            # except Exception as e:
+            #     print e
+            #     print repr(bit)
+            #     raise
+            self.i.put('#%02x%02x%02x' % tuple(bit), (col, row))
+            col += 1
+            if col == self.width:
+                if row % 100 == 0:
+                    print "{0:.0%} ({1}/{2} rows)".format(row / float(self.height), row, self.height)
+                row += 1
+                col = 0
         c = Tkinter.Canvas(t, width=self.width, height=self.height)
         c.pack()
         c.create_image(0, 0, image = self.i, anchor=Tkinter.NW)

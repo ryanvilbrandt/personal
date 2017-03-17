@@ -1,4 +1,5 @@
 import sys
+from sieve import sieve
 
 def print_array(a, digits=3):
     for i in a:
@@ -18,33 +19,6 @@ def build_primes(max_n):
         if proved:
             proved_primes.append(i)
     return proved_primes
-
-def sieve(N):
-    # Open primes_list.txt, if it exists
-    try:
-        with open("primes_list.txt", 'r') as f:
-            primes = eval(f.read())
-    except Exception:
-        primes = []
-    # Check if more primes need to be calculated
-    if not primes or max(primes) < N:
-        print "Building primes list"
-        if primes:
-            # Create number list starting AFTER the highest prime in primes
-            nums = range(max(primes)+1, N)
-        else:
-            # Create number list starting at 2
-            nums = range(2, N)
-        # Sieve of Eratosthenes
-        for i in range(2, int(N**0.5)+1): 
-            nums = filter(lambda x: x == i or x % i, nums)
-
-        # Write new set of primes to primes_list.txt
-        with open("primes_list.txt", 'w') as f:
-            f.write(repr(primes + nums))
-        return primes + nums
-    else:
-        return primes
 
 def ifprime(n, fast=True):
     '''

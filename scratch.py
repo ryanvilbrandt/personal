@@ -1,54 +1,19 @@
-import timeit, random
+##with open("debug.txt") as f_in:
+##    with open("debug_out.txt", 'w') as f_out:
+##        for line in f_in:
+##            if line.startswith("Average reading:") or line.startswith("Test 42"):
+##                f_out.write(line)
 
-statement1 = '''
-for i in gen1(master, slave):
-    pass
-'''
-statement2 = '''
-for i in gen2(master, slave):
-    pass
-'''
-statement3 = '''
-for i in gen3(master, slave):
-    pass
-'''
-statement4 = '''
-for i in gen4(master, slave):
-    pass
-'''
 
-setup = '''
-import random
-
-master = range(100)
-#slave = set([9, 17, 229, 678, 1457, 3893, 8979, 103843])
-slave = set([9, 17, 22, 67, 14, 38, 89, 103])
-
-def gen1(a, b):
-    #c = set(b)
-    for _ in a:
-        if not _ in b:
-            yield _
-
-def gen2(a, b):
-    #c = set(b)
-    return [_ for _ in a if not _ in b]
-
-def gen3(a, b):
-    #c = set(b)
-    for i in [_ for _ in a if not _ in b]:
-        yield i
-
-def gen4(a, b):
-    return_list = []
-    #c = set(b)
-    for _ in a:
-        if not _ in b:
-            return_list.append(_)
-    return return_list
-'''
-
-print timeit.timeit(statement1, setup, number = 10000)
-print timeit.timeit(statement2, setup, number = 10000)
-print timeit.timeit(statement3, setup, number = 10000)
-print timeit.timeit(statement4, setup, number = 10000)
+f_in = open("debug_out.txt")
+with open("debug_out.csv", 'w') as f_out:
+    try:
+        while True:
+            time_line = f_in.readline()
+            t = time_line.split(' ')
+            data_line = f_in.readline()
+            d = data_line.split(' ')
+            f_out.write("{} {} {},{},\n".format(t[4], t[5], t[6], d[8]))
+    except Exception as e:
+        print(e)
+f_in.close()
