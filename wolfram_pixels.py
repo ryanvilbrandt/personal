@@ -14,8 +14,10 @@ RANDOMIZE_RULES = False
 
 class App:
 
-    width = 4095
-    height = 2048
+    # width = 4095
+    # height = 2048
+    height = 256
+    width = height * 2 - 1
 
 ##    rules = [1, 0, 0, 1, 1, 0, 1, 0] #frost
 ##    rules = [1, 0, 0, 1, 1, 1, 0, 0] #mountains
