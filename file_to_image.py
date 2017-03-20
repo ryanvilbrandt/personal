@@ -21,12 +21,14 @@ height = ceil(pixel_count / width)
 print("Size:", width, "/", height)
 
 with open(FILE_PATH, 'rb') as f:
+    img = Image.new('RGB', (width, height), "white")
     pixels = img.load()
 
     x, y = 0, 0
     while f.tell() < file_size:
         color = (safe_read(f, 1), safe_read(f, 1), safe_read(f, 1))
         color = tuple(map(ord, color))
+        # print(color)
         pixels[x, y] = color
         x += 1
         if x >= width:
