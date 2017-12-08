@@ -296,5 +296,90 @@ def problem_4_b():
     with open("D:\\GitHub_ryanvilbrandt\\personal\\inputs\\advent_of_code_2017_problem_4_input.txt") as f:
         problem_4_input = f.read()
     print(find_valid_passphrases(problem_4_input))
-    
-problem_4_b()
+
+
+def problem_5_a():
+    def jump(jump_list):
+        index = 0
+        jump_count = 0
+        while 0 <= index < len(jump_list):
+            # print(jump_list)
+            last_index = index
+            index += jump_list[index]
+            jump_list[last_index] += 1
+            jump_count += 1
+        # print(jump_list)
+        # print()
+        return jump_count
+    a = [0, 3, 0, 1, -3]
+    print(a, jump(a[:]))
+    with open("D:\\GitHub_ryanvilbrandt\\personal\\inputs\\advent_of_code_2017_problem_5_input.txt") as f:
+        input_list = f.read().strip('\n').split('\n')
+    input_list = [int(x) for x in input_list]
+    print(jump(input_list))
+
+def problem_5_b():
+    def jump(jump_list):
+        index = 0
+        jump_count = 0
+        while 0 <= index < len(jump_list):
+            # print(jump_list)
+            last_index = index
+            index += jump_list[index]
+            jump_list[last_index] += 1 if jump_list[last_index] < 3 else -1
+            jump_count += 1
+        # print(jump_list)
+        # print()
+        return jump_count
+    a = [0, 3, 0, 1, -3]
+    print(a, jump(a[:]))
+    with open("D:\\GitHub_ryanvilbrandt\\personal\\inputs\\advent_of_code_2017_problem_5_input.txt") as f:
+        input_list = f.read().strip('\n').split('\n')
+    input_list = [int(x) for x in input_list]
+    print(jump(input_list))
+
+
+def problem_6_a():
+    def check_history(history, new_list):
+        if new_list in history:
+            return False
+        history.append(new_list[:])
+        return True
+    def reallocate(blocks):
+        history = []
+        loops = 0
+        while check_history(history, blocks):
+            max_index = blocks.index(max(blocks))
+            blocks_to_redistribute = blocks[max_index]
+            blocks[max_index] = 0
+            for i in range(blocks_to_redistribute):
+                blocks[(max_index + i + 1) % len(blocks)] += 1
+            # print(history, blocks)
+            loops += 1
+        return loops
+    print(reallocate([0, 2, 7, 0]))
+    print(reallocate([4, 1, 15, 12, 0, 9, 9, 5, 5, 8, 7, 3, 14, 5, 12, 3]))
+
+def problem_6_b():
+    def check_history(history, new_list):
+        if history.count(new_list) == 2:
+            return False
+        history.append(new_list[:])
+        return True
+    def reallocate(blocks):
+        history = []
+        loops = 0
+        while check_history(history, blocks):
+            max_index = blocks.index(max(blocks))
+            blocks_to_redistribute = blocks[max_index]
+            blocks[max_index] = 0
+            for i in range(blocks_to_redistribute):
+                blocks[(max_index + i + 1) % len(blocks)] += 1
+            # print(history, blocks)
+            loops += 1
+        return loops
+    print(reallocate([0, 2, 7, 0]))
+    print(reallocate([4, 1, 15, 12, 0, 9, 9, 5, 5, 8, 7, 3, 14, 5, 12, 3]))
+            
+
+
