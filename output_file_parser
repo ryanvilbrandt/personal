@@ -1,0 +1,375 @@
+# https://confluence.zonarsystems.net/display/MP/ELD+Output+File+Data+Transfer
+
+a = """
+ELD File Header Segment:
+Vilbrandt,Ryan1,2626,WA,2626,DF
+,,,96
+R18000228,5NPE34AB5FH114768,,AE
+123492,sysad2342_mbl2020,7,000000,07,1E
+,0,96
+041318,120417,X,X,0,0.0,15
+J19I,ZONAR1,6FF7A9EB20944DEA929DE62CD49FD4AF,,FD
+User List:
+1,D,Vilbrandt,Ryan1,A1
+2,D,Driver,Unidentified,41
+CMV List:
+1,R18000228,5NPE34AB5FH114768,D6
+ELD Event List:
+1,1,4,1,4,041318,114521,2000,0.1,47.7,-122.34,0,1,1,0,1,8E,CD
+2,1,4,1,3,041318,113633,0,0.0,47.7,-122.34,0,1,1,0,1,8E,CD
+3,1,2,3,0,041318,113633,0,0.0,47.7,-122.34,0,1,1,0,1,96,4C
+4,1,2,1,1,041318,113613,0,0.0,47.7,-122.3,0,1,1,0,0,07,F4
+5,1,2,3,1,041318,113613,0,0.0,47.7,-122.3,0,1,1,0,0,17,14
+ELD Event Annotations or Comments:
+4,2626,ggggg,041318,113613,,AC
+5,2626,ggggg,041318,113613,,D4
+Driver's Certification/Recertification Actions:
+Malfunctions and Data Diagnostic Events:
+6,4,2,041318,115449,23999,1208.6,1,AD
+7,3,2,041318,113633,23999,1208.5,1,6C
+8,3,3,041318,113633,23999,1208.5,1,9D
+ELD Login/Logout Report:
+9,1,2626,041318,114518,23999,1208.5,ED
+A,2,2626,041318,113621,0,0.0,84
+CMV Engine Power-Up and Shut Down Activity:
+B,3,041318,113555,21756,1208.3,47.7,-122.34,R18000228,5NPE34AB5FH114768,,,82
+Unidentified Driver Profile Records:
+C,2,4,1,4,041318,114521,2000,0.1,47.7,-122.34,0,1,0,8E,75
+D,1,4,6,1,041318,113633,0,0.0,47.7,-122.34,0,1,0,96,15
+E,2,4,1,3,041318,113633,0,0.0,47.7,-122.34,0,1,0,FE,CA
+End of File:
+EEFC
+"""
+
+
+a = a.split('\n')
+i = 0
+
+if a[0] == "":
+    i += 1
+
+assert(a[i] == "ELD File Header Segment:")
+i += 1
+
+row = a[i].split(',')
+print("Driver's last name:", row[0])
+print("Driver's first name:", row[1])
+print("Driver's Tag ID:", row[2])
+print("Driver's license state:", row[3])
+print("Driver's license #:", row[4])
+print("Checksum:", row[5])
+print("")
+i += 1
+
+row = a[i].split(',')
+print("Codriver's last name:", row[0])
+print("Coriver's first name:", row[1])
+print("Codriver's Tag ID:", row[2])
+print("Checksum:", row[3])
+print("")
+i += 1
+
+row = a[i].split(',')
+print("CMV PUN:", row[0])
+print("CMV VIN:", row[1])
+print("Trailer #:", row[2])
+print("Checksum:", row[3])
+print("")
+i += 1
+
+row = a[i].split(',')
+print("Carrier's USDOT #:", row[0])
+print("Carrier name:", row[1])
+print("Multiday-bases Used:", row[2])
+print("24 hour period starting time:", row[3])
+print("Time zone offset from UTC:", row[4])
+print("Checksum:", row[5])
+print("")
+i += 1
+
+row = a[i].split(',')
+print("Shipping document #:", row[0])
+print("Exempt Driver Config:", row[1])
+print("Checksum:", row[2])
+print("")
+i += 1
+
+row = a[i].split(',')
+print("Current date:", row[0])
+print("Current time:", row[1])
+print("Current Latitude:", row[2])
+print("Current Longitude:", row[3])
+print("Current Total Vehicle Miles:", row[4])
+print("Current Total Engine Hours:", row[5])
+print("Checksum:", row[6])
+print("")
+i += 1
+
+row = a[i].split(',')
+print("ELD Registration ID:", row[0])
+print("ELD Identifier:", row[1])
+print("ELD Authentication Value:", row[2])
+print("Comment:", row[3])
+print("Checksum:", row[4])
+print("")
+i += 1
+
+assert(a[i] == "User List:")
+i += 1
+
+while a[i] != "CMV List:":
+    row = a[i].split(',')
+    print("Order Number:", row[0])
+    print("ELD Account Type:", row[1])
+    print("User Last Name:", row[2])
+    print("User First Name:", row[3])
+    print("Checksum:", row[4])
+    print("")
+    i += 1
+
+assert(a[i] == "CMV List:")
+i += 1
+
+while a[i] != "ELD Event List:":
+    row = a[i].split(',')
+    print("Order Number:", row[0])
+    print("CMV PUN:", row[1])
+    print("CMV VIN:", row[2])
+    print("Checksum:", row[3])
+    print("")
+    i += 1
+
+assert(a[i] == "ELD Event List:")
+i += 1
+
+def event_record_status(code):
+    d = {'1': "ACTIVE", '2': "INACTIVE_CHANGED", '3': "INACTIVE_CHANGE_REQUESTED",
+         '4': "INACTIVE_CHANGE_REJECTED", '5': "REASSIGNING"}
+    if code not in d:
+        return code
+    return "{} ({})".format(d[code], code)
+
+def event_record_origin(code):
+    d = {'1': "SYSTEM", '2': "DRIVER", '3': "NON_DRIVER", '4': "UNIDENTIFIED_DRIVER"}
+    if code not in d:
+        return code
+    return "{} ({})".format(d[code], code)
+
+def event_type(code):
+    d = {
+        '1': "CHANGE_IN_DRIVER_DUTY_STATUS",
+        '2': "INTERMEDIATE_LOG",
+        '3': "CHANGE_IN_DRIVER_INDICATION_AUTHORIZED_PERSONAL_USE_OF_CMV_OR_YARD_MOVES",
+        '4': "DRIVERS_CERTIFICATION_OF_RECORDS",
+        '5': "DRIVER_LOGIN_LOGOUT_ACTIVITY",
+        '6': "CMV_ENGINE_POWER_UP_SHUT_DOWN_ACTIVITY",
+        '7': "MALFUNCTION_OR_DATA_DIAGNOSTIC_DETECTION_OCCURRENCE",
+        '100': "SYSTEM_APPLIED_DESCRIPTOR",
+        '101': "USER_APPLIED_DESCRIPTOR",
+        '102': "RULESET_CHANGE",
+        '103': "METADATA_CHANGE",
+        '104': "ASSET_CHANGE",
+        '200': "EFFECT_USER_APPLIED_DESCRIPTOR"
+    }
+    if code not in d:
+        return code
+    return "{} ({})".format(d[code], code)
+
+def event_code(etype, code):
+    if etype == '1':
+        d = {'1': "OFF_DUTY", '2': "SLEEPER_BERTH", '3': "DRIVING", '4': "ON_DUTY"}
+    elif etype == '2':
+        d = {'1': "CONVENTIONAL_LOCATION_PRECISION", '2': "REDUCED_LOCATION_PRECISION"}
+    elif etype == '3':
+        d = {'1': "PERSONAL_USE", '2': "YARD_MOVES", '3': "WAITING_AT_OIL_WELL",
+             '100': "WAITING_AT_OIL_WELL", '101': "HIGH_RAIL",
+             '200': "CLEAR_PERSONAL_USE", '201': "CLEAR_YARD_MOVES",
+             '202': "CLEAR_WAITING_AT_OIL_WELL", '203': "CLEAR_HIGH_RAIL"}
+    elif etype == '4':
+        d = {}
+    elif etype == '5':
+        d = {'1': "LOGIN", '2': "LOGOUT"}
+    elif etype == '6':
+        d = {'1': "POWER_UP_WITH_CONVENTIONAL_LOCATION_PRECISION",
+             '2': "POWER_UP_WITH_REDUCED_LOCATION_PRECISION",
+             '3': "POWER_DOWN_WITH_CONVENTIONAL_LOCATION_PRECISION",
+             '4': "POWER_DOWN_WITH_REDUCED_LOCATION_PRECISION"}
+    elif etype == '7':
+        d = {'1': "ELD_MALFUNCTION_LOGGED", '2': "ELD_MALFUNCTION_CLEARED",
+             '3': "DATA_DIAGNOSTIC_EVENT_LOGGED", '4': "DATA_DIAGNOSTIC_EVENT_CLEARED"}
+    elif etype == '100':
+        d = {'1': "OUTSIDE_RADIUS", '2': "MAX_TIME_UNDOCKED", '3': "GPS_LOCK",
+             '4': "AUTO_INSERT"}
+    elif etype == '101':
+        d = {'1': "BIG_DAY", '2': "ADVERSE_CONDITIONS", '3': "RESTART"}
+    elif etype == '102':
+        d = {
+            '1': "US_7_PROPERTY",
+            '2': "US_8_PROPERTY",
+            '3': "US_7_PASSENGER",
+            '4': "US_8_PASSENGER",
+            '5': "US_8_PROPERTY_OIL_WELL",
+            '6': "US_8_PROPERTY_OIL_FIELD",
+            '7': "US_7_PROPERTY_BIGDAY",
+            '8': "US_8_PROPERTY_BIGDAY",
+            '9': "CA_7_60_SOUTH",
+            '10': "CA_14_60_SOUTH",
+            '11': "US_7_PROPERTY_SHORTHAUL",
+            '12': "US_8_PROPERTY_SHORTHAUL",
+            '13': "US_7_UNIVERSAL",
+            '14': "US_8_UNIVERSAL",
+            '15': "US_7_PROPERTY_CONSTRUCTION",
+            '16': "US_8_PROPERTY_CONSTRUCTION"
+        }
+    elif etype == '103':
+        d = {'1': "TRAILER_PICK", '2': "TRAILER_DROP", '3': "DOLLY_PICK",
+             '4': "DOLLY_DROP", '5': "LOAD_PICK", '6': "LOAD_DROP",
+             '7': "CO_DRIVER_START", '8': "CO_DRIVER_END"}
+    elif etype == '104':
+        d = {'1': "ASSET_CHANGE"}
+    elif etype == '200':
+        d = {'1': "EFFECT_ADVERSE_WEATHER", '2': "EFFECT_BIGDAY",
+             '3': "EFFECT_RESTART"}
+    else:
+        d = {}
+
+    if code not in d:
+        return code
+    return "{} ({})".format(d[code], code)
+
+
+while a[i] != "ELD Event Annotations or Comments:":
+    row = a[i].split(',')
+    print("Event Sequence ID #:", row[0])
+    print("Event Record Status:", event_record_status(row[1]))
+    print("Event Record Origin:", event_record_origin(row[2]))
+    print("Event Type:", event_type(row[3]))
+    print("Event Code:", event_code(row[3], row[4]))
+    print("Date:", row[5][0:2]+"-"+row[5][2:4]+"-"+row[5][4:6])
+    print("Time:", row[6][0:2]+":"+row[6][2:4]+":"+row[6][4:6])
+    print("Vehicle Miles:", row[7])
+    print("Engine Hours", row[8])
+    print("Latitude", row[9])
+    print("Longitude", row[10])
+    print("Distance Since", row[11])
+    print("Order Number", row[12])
+    print("User Order Number", row[13])
+    print("Malfunction Status", row[14])
+    print("Diag Status", row[15])
+    print("Event Data Check Value", row[16])
+    print("Checksum:", row[17])
+    print("")
+    i += 1
+
+assert(a[i] == "ELD Event Annotations or Comments:")
+i += 1
+
+while a[i] != "Driver's Certification/Recertification Actions:":
+    row = a[i].split(',')
+    print("ELD Event Sequence ID #:", row[0])
+    print("ELD Username:", row[1])
+    print("Comment/Annotation:", row[2])
+    print("Date:", row[3][0:2]+"-"+row[3][2:4]+"-"+row[3][4:6])
+    print("Time:", row[4][0:2]+":"+row[4][2:4]+":"+row[4][4:6])
+    print("Location Description:", row[5])
+    print("Checksum:", row[6])
+    print("")
+    i += 1
+
+assert(a[i] == "Driver's Certification/Recertification Actions:")
+i += 1
+
+while a[i] != "Malfunctions and Data Diagnostic Events:":
+    row = a[i].split(',')
+    print("Event Sequence ID #:", row[0])
+    print("Event Code:", row[1])
+    print("Date:", row[2][0:2]+"-"+row[2][2:4]+"-"+row[2][4:6])
+    print("Time:", row[3][0:2]+":"+row[3][2:4]+":"+row[3][4:6])
+    print("Date of record:", row[4])
+    print("Order Number:", row[5])
+    print("Checksum:", row[6])
+    print("")
+    i += 1
+
+assert(a[i] == "Malfunctions and Data Diagnostic Events:")
+i += 1
+
+while a[i] != "ELD Login/Logout Report:":
+    row = a[i].split(',')
+    print("Event Sequence ID #:", row[0])
+    print("Event Code:", row[1])
+    print("DIAG/MAL Code:", row[2])
+    print("Date:", row[3][0:2]+"-"+row[3][2:4]+"-"+row[3][4:6])
+    print("Time:", row[4][0:2]+":"+row[4][2:4]+":"+row[4][4:6])
+    print("Vehicle Miles:", row[5])
+    print("Engine Hours:", row[6])
+    print("Order Number:", row[7])
+    print("Checksum:", row[8])
+    print("")
+    i += 1
+
+assert(a[i] == "ELD Login/Logout Report:")
+i += 1
+
+while a[i] != "CMV Engine Power-Up and Shut Down Activity:":
+    row = a[i].split(',')
+    print("Event Sequence ID #:", row[0])
+    print("Event Code:", row[1])
+    print("Username:", row[2])
+    print("Date:", row[3][0:2]+"-"+row[3][2:4]+"-"+row[3][4:6])
+    print("Time:", row[4][0:2]+":"+row[4][2:4]+":"+row[4][4:6])
+    print("Vehicle Miles:", row[5])
+    print("Engine Hours:", row[6])
+    print("Checksum:", row[7])
+    print("")
+    i += 1
+
+assert(a[i] == "CMV Engine Power-Up and Shut Down Activity:")
+i += 1
+
+while a[i] != "Unidentified Driver Profile Records:":
+    row = a[i].split(',')
+    print("Event Sequence ID #:", row[0])
+    print("Event Code:", row[1])
+    print("Date:", row[2][0:2]+"-"+row[2][2:4]+"-"+row[2][4:6])
+    print("Time:", row[3][0:2]+":"+row[3][2:4]+":"+row[3][4:6])
+    print("Vehicle Miles:", row[4])
+    print("Engine Hours:", row[5])
+    print("Latitude:", row[6])
+    print("Longitude:", row[7])
+    print("PUN:", row[8])
+    print("VIN:", row[9])
+    print("Trailer Number:", row[10])
+    print("Shipping Document Number:", row[11])
+    print("Checksum:", row[12])
+    print("")
+    i += 1
+
+assert(a[i] == "Unidentified Driver Profile Records:")
+i += 1
+
+while a[i] != "End of File:":
+    row = a[i].split(',')
+    print("Event Sequence ID #:", row[0])
+    print("Event Record Status:", event_record_status(row[1]))
+    print("Event Record Origin:", event_record_origin(row[2]))
+    print("Event Type:", event_type(row[3]))
+    print("Event Code:", event_code(row[3], row[4]))
+    print("Date:", row[5][0:2]+"-"+row[5][2:4]+"-"+row[5][4:6])
+    print("Time:", row[6][0:2]+":"+row[6][2:4]+":"+row[6][4:6])
+    print("Vehicle Miles:", row[7])
+    print("Engine Hours", row[8])
+    print("Latitude", row[9])
+    print("Longitude", row[10])
+    print("Distance Since", row[11])
+    print("Order Number", row[12])
+    print("Malfunction Status", row[13])
+    print("Event Data Check Value", row[14])
+    print("Checksum:", row[15])
+    print("")
+    i += 1
+
+assert(a[i] == "End of File:")
+i += 1
+
+print("File Data Check Value:", a[i])
