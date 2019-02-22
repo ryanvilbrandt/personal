@@ -15,11 +15,13 @@ def step2and3(num):
     return large_num - small_num
 
 def stepCycle(num):
+    print(num)
     iter = 0
     old_num = 0
     while True:
         iter += 1
         num = step2and3(num)
+        print(num)
         if num == old_num:
             return num, iter
         old_num = num

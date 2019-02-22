@@ -39,11 +39,11 @@ def step_death_floor(death_floor):
     count = 0
     for floor_1 in floor_steps:
         count += 1
-        if floor_1 >= death_floor:
+        if floor_1 > death_floor:
             break
         last_floor = floor_1
     else:
-        # The lightbulb didn't drop on any of the floors.
+        # The lightbulb didn't break on any of the floors.
         # Test once more on the 100th floor and report results
         count += 1
         if 100 == death_floor:
@@ -64,10 +64,10 @@ def step_death_floor(death_floor):
         # is the death floor. Return that.
         return floor_2 + 1, count
 
-with open('step_bulbs.csv', 'w') as f:
-    # Testing up to 101, because it's possible the lightbulb will not break on the 100th
-    for i in xrange(1, FLOORS+2):
-        results = step_death_floor(i)
-        f.write("{},{}\n".format(*results))
-        print results
+# with open('step_bulbs.csv', 'w') as f:
+# Testing up to 101, because it's possible the lightbulb will not break on the 100th
+for i in xrange(1, FLOORS+2):
+    results = step_death_floor(i)
+    # f.write("{},{}\n".format(*results))
+    print results
 

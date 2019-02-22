@@ -1,14 +1,16 @@
 import sys, time
 
-MEM_ARRAY_SIZE = 16
+MEM_ARRAY_SIZE = 128
 MEM_BITS = 64
 VERBOSE = False
-PRINT_CHAR = False
+PRINT_CHAR = True
+
 
 def print_code(in_str, codeptr, dataptr, mem, iters):
     print(in_str)
     print(" " * codeptr + "^")
-    print("{0}: {1} ({2} iters)".format(dataptr, mem, iters))
+    print("{} {}: {} ({} iters)".format(codeptr, dataptr, mem, iters))
+
 
 def main(in_str):
     mem = [0] * MEM_ARRAY_SIZE
@@ -30,7 +32,7 @@ def main(in_str):
             mem[dataptr] = (mem[dataptr] - 1) % bits_mod
         elif in_str[codeptr] == ".":
             if PRINT_CHAR:
-                sys.stdout.write(repr(chr(mem[dataptr])))
+                sys.stdout.write(chr(mem[dataptr]))
             else:
                 sys.stdout.write(str(mem[dataptr]))
         elif in_str[codeptr] == ",":
@@ -86,18 +88,21 @@ def main(in_str):
                     return
                 codeptr = levelarray[-1]
         if VERBOSE:
-            print("")
+            # print("")
             print_code(in_str, codeptr, dataptr, mem, iters)
-            time.sleep(0.1)
+            time.sleep(0.01)
         codeptr += 1
 
-    print("\n\n{}: {} ({} iters)".format(dataptr, mem, iters))
+    # print("\n\n{}: {} ({} iters)".format(dataptr, mem, iters))
+
 
 if __name__ == "__main__":
     # in_str = "Addition ,>,[-<+>]<."
     # in_str = "Multiplication ,>,<[>[>+>+<<-]>[<+>-]<<-]>>>."
-    in_str = "Factorial ,[->+>+<<]>>->>+<<<[>[<[->[-<<+>>>+<]>[-<+>]<<]<[->+<]>>-]<.>>>-]>>>[.-]"
-    #in_str = "++++[.-]"
+    # in_str = "Factorial ,[->+>+<<]>>->>+<<<[>[<[->[-<<+>>>+<]>[-<+>]<<]<[->+<]>>-]<.>>>-]>>>[.-]"
+    # in_str = "++++[.-]"
+    in_str = open('99_bottles_of_beer.brainfuck').read()
+
 
     ##in_str = ""
     ##i = raw_input("Input brainfsck code now, type 'run' to end: ")

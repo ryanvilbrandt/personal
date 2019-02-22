@@ -7,7 +7,7 @@ elements = ['H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'A
             'W', 'Re', 'Os', 'Ir', 'Pt', 'Au', 'Hg', 'Tl', 'Pb', 'Bi', 'Po', 'At', 'Rn', 'Fr', 'Ra', 'Ac', 'Th', 'Pa',
             'U', 'Np', 'Pu', 'Am', 'Cm', 'Bk', 'Cf', 'Es', 'Fm', 'Md', 'No', 'Lr', 'Rf', 'Db', 'Sg', 'Bh', 'Hs', 'Mt']
 
-dictionary_path = "inputs/linuxwords.txt"  # new-line delimited list of words
+dictionary_path = "inputs/words_alpha.txt"  # new-line delimited list of words
 found_words_filepath = "outputs/periodic_words.txt"
 
 def parse_word(letters, remaining_word, word_so_far):
@@ -40,4 +40,17 @@ def main():
         f.write("\n".join(found_words))
 
 if __name__ == "__main__":
-    main()
+    # main()
+
+    full_dict_count = 0
+    with open(dictionary_path) as f:
+        for word in f:
+            full_dict_count += 1
+    parsed_dict_count = 0
+    with open(found_words_filepath) as f:
+        for word in f:
+            parsed_dict_count += 1
+
+    print(full_dict_count)
+    print(parsed_dict_count)
+    print(parsed_dict_count / float(full_dict_count))
