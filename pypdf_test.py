@@ -12,7 +12,7 @@ HEADER_LINE_HEIGHT = 8
 EVENT_HEADER_LINE_HEIGHT = 5
 LINE_HEIGHT = 4
 PAGE_WIDTH = 190
-PAGE_HEIGHT = 270
+PAGE_HEIGHT = 260
 
 HEADER_LOGO_HEIGHT = 16
 HEADER_LOGO_WIDTH = 50
@@ -36,11 +36,11 @@ SECONDS_IN_A_DAY = 86400
 EVENT_DESCRIPTION_MIN_LINE_NUM = 2
 EVENT_DESCRIPTION_MIN_LINE_NUM_BUBBLE = 3
 
-GRID_AREA_HEIGHT = 54
+GRID_AREA_HEIGHT = 58
 GRID_WIDTH = 144
 GRID_HEIGHT = 48
 GRID_X = 10 + PAGE_MARGIN_SIDES
-GRID_Y = 0
+GRID_Y = 4
 GRID_LINE_OVERLAP = 3.5
 MAJOR_TICK_LENGTH = 4
 MINOR_TICK_LENGTH = 2
@@ -98,12 +98,10 @@ EVENTS_WITHOUT_LOCATION = [
 ]
 
 
-def horizontal_line(pdf, line_height=LINE_HEIGHT, line_width=PAGE_WIDTH):
+def horizontal_line(pdf, line_width=PAGE_WIDTH):
     pdf.set_draw_color(*ZC_SLATE)
-    pdf.ln(line_height)
     x, y = pdf.get_x(), pdf.get_y()
     pdf.line(x, y, x + line_width, y)
-    pdf.ln(line_height)
 
 
 def header(pdf):
@@ -113,7 +111,7 @@ def header(pdf):
 
     # Add image
     pdf.image(HEADER_LOGO_PATH, PAGE_MARGIN_SIDES, PAGE_MARGIN_TOP - HEADER_LOGO_HEIGHT / 4, HEADER_LOGO_WIDTH)
-    pdf.cell(HEADER_LOGO_WIDTH)
+    pdf.set_x(pdf.get_x() + HEADER_LOGO_WIDTH)
 
     # Add header text
     pdf.cell(100, HEADER_LINE_HEIGHT, txt='Driver Logs')
@@ -125,12 +123,14 @@ def header(pdf):
     pdf.ln(HEADER_LINE_HEIGHT)
 
     # Add line
-    horizontal_line(pdf, HEADER_LINE_HEIGHT)
+    pdf.ln(HEADER_LINE_HEIGHT)
+    horizontal_line(pdf)
 
 
 def add_driver_data(data, columns):
     column_width = PAGE_WIDTH / columns
     while data:
+        pdf.ln(LINE_HEIGHT)
         # Handle each row of columns individually
         workspace = data[:columns]
         data = data[columns:]
@@ -147,7 +147,6 @@ def add_driver_data(data, columns):
         pdf.set_text_color(*ZC_GREY)
         for label, text in workspace:
             pdf.cell(column_width, txt=text)
-        pdf.ln(LINE_HEIGHT)
         pdf.ln(LINE_HEIGHT)
 
 
@@ -211,7 +210,7 @@ def draw_grid_decorations(pdf, start_x, start_y, bar_height, day_width):
     # Draw day numbers
     pdf.set_text_color(*ZC_GREY)
     pdf.set_font_size(NORMAL_FONT_SIZE)
-    y = start_y + GRID_HEIGHT + DAY_NUMBER_Y_OFFSET
+    y = start_y + GRID_Y + GRID_HEIGHT + DAY_NUMBER_Y_OFFSET
     pdf.set_xy(GRID_X, y)
     for i in range(25):
         pdf.set_xy(i * day_width + GRID_X + DAY_NUMBER_X_OFFSET, y)
@@ -293,6 +292,7 @@ def draw_grid(pdf, re_summary):
 
     # Set cursor to below the grid, on a new line
     pdf.set_xy(start_x, start_y + GRID_AREA_HEIGHT)
+    pdf.ln(LINE_HEIGHT)
     horizontal_line(pdf)
 
 
@@ -314,6 +314,7 @@ def get_event_header(event, event_type, event_code):
 
 
 def draw_log_event(pdf, event):
+    pdf.ln(LINE_HEIGHT)
     start_x, start_y = pdf.get_x(), pdf.get_y()
 
     event_type = zlogs_definitions.get("eld_event_type", {}).get(event["event_type_name"])
@@ -322,6 +323,7 @@ def draw_log_event(pdf, event):
     pdf.set_text_color(*ZC_BLACK)
 
     # Draw Duty Status circle and event time
+    pdf.set_font_size(EVENT_DESCRIPTION_HEADER_FONT_SIZE)
     if event_code and event_code.get("abbr"):
         # Draw circle
         pdf.set_draw_color(*ZC_ROYAL)
@@ -336,7 +338,6 @@ def draw_log_event(pdf, event):
         pdf.set_xy(start_x + LOG_EVENT_TIME_X_OFFSET, start_y + LOG_EVENT_TIME_Y_OFFSET)
     else:
         pdf.set_xy(start_x + LOG_EVENT_TIME_X_OFFSET, start_y + LOG_EVENT_TIME_Y_OFFSET_CENTERED)
-    pdf.set_font_size(EVENT_DESCRIPTION_HEADER_FONT_SIZE)
     pdf.cell(0, txt=strftime(TIME_FORMAT, localtime(event["epoch"])))
 
     # Draw log event header
@@ -405,7 +406,7 @@ def draw_log_event(pdf, event):
         pdf.set_x(start_x + LOG_EVENT_TEXT_X_OFFSET)
 
     # Set cursor to below the event, on a new line
-    pdf.set_xy(start_x, max(pdf.get_y() - LINE_HEIGHT, start_y + LOG_EVENT_HEIGHT))
+    pdf.set_xy(start_x, max(pdf.get_y() - LINE_HEIGHT, start_y + LOG_EVENT_HEIGHT + LINE_HEIGHT))
     horizontal_line(pdf)
 
 
@@ -417,7 +418,6 @@ def draw_log_events(pdf, event_list):
     for event in event_list:
         if pdf.get_y() - PAGE_MARGIN_TOP + LOG_EVENT_HEIGHT + LINE_HEIGHT * 2 > PAGE_HEIGHT:
             pdf.add_page()
-            header(pdf)
         draw_log_event(pdf, event)
 
 
@@ -446,8 +446,10 @@ if __name__ == "__main__":
     # Page 2
     pdf.add_page()
     header(pdf)
+    pdf.ln(HEADER_LINE_HEIGHT)
     pdf.cell(0, txt="01/21/2019", align='R')
-    horizontal_line(pdf, line_height=HEADER_LINE_HEIGHT)
+    pdf.ln(HEADER_LINE_HEIGHT)
+    horizontal_line(pdf)
     data = [("Team Driver(s)", "")]
     add_driver_data(data, 1)
     horizontal_line(pdf)
