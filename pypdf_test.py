@@ -59,9 +59,12 @@ DUTY_STATUSES = {"OFF_DUTY": 1, "SB": 2, "DRIVING": 3, 'ON_DUTY': 4}
 METERS_IN_A_MILE = 1609.34
 
 LOG_EVENT_HEIGHT = 20
-LOG_EVENT_CIRCLE_RADIUS = 8
-LOG_EVENT_CIRCLE_X_OFFSET = 1
-LOG_EVENT_CIRCLE_Y_OFFSET = 0
+LOG_EVENT_OUTER_CIRCLE_RADIUS = 8
+LOG_EVENT_INNER_CIRCLE_RADIUS = 7
+LOG_EVENT_OUTER_CIRCLE_X_OFFSET = 1
+LOG_EVENT_OUTER_CIRCLE_Y_OFFSET = 0
+LOG_EVENT_INNER_CIRCLE_X_OFFSET = 2
+LOG_EVENT_INNER_CIRCLE_Y_OFFSET = 1
 LOG_EVENT_ABBR_X_OFFSET = 8.5
 LOG_EVENT_ABBR_Y_OFFSET = 8.5
 LOG_EVENT_TIME_X_OFFSET = 0
@@ -117,7 +120,7 @@ def header(pdf):
     pdf.cell(100, HEADER_LINE_HEIGHT, txt='Driver Logs')
 
     # Add date
-    pdf.cell(0, HEADER_LINE_HEIGHT, txt="02/19/2019", align='R')
+    # pdf.cell(0, HEADER_LINE_HEIGHT, txt="Generated on 02/19/2019", align='R')
 
     # New line
     pdf.ln(HEADER_LINE_HEIGHT)
@@ -326,11 +329,14 @@ def draw_log_event(pdf, event):
     pdf.set_font_size(EVENT_DESCRIPTION_HEADER_FONT_SIZE)
     if event_code and event_code.get("abbr"):
         # Draw circle
-        pdf.set_draw_color(*ZC_ROYAL)
+        pdf.set_fill_color(*ZC_ROYAL)
+        diameter = LOG_EVENT_OUTER_CIRCLE_RADIUS * 2
+        pdf.ellipse(start_x + LOG_EVENT_OUTER_CIRCLE_X_OFFSET, start_y + LOG_EVENT_OUTER_CIRCLE_Y_OFFSET,
+                    diameter, diameter, style="F")
         pdf.set_fill_color(*ZC_GHOST)
-        diameter = LOG_EVENT_CIRCLE_RADIUS * 2
-        pdf.ellipse(start_x + LOG_EVENT_CIRCLE_X_OFFSET, start_y + LOG_EVENT_CIRCLE_Y_OFFSET,
-                    diameter, diameter, style="DF")
+        diameter = LOG_EVENT_INNER_CIRCLE_RADIUS * 2
+        pdf.ellipse(start_x + LOG_EVENT_INNER_CIRCLE_X_OFFSET, start_y + LOG_EVENT_INNER_CIRCLE_Y_OFFSET,
+                    diameter, diameter, style="F")
         # Draw duty status abbreviation
         pdf.set_xy(start_x + LOG_EVENT_ABBR_X_OFFSET, start_y + LOG_EVENT_ABBR_Y_OFFSET)
         pdf.cell(1, txt=event_code.get("abbr"), align='C')
@@ -428,6 +434,12 @@ if __name__ == "__main__":
     # Page 1
     pdf.add_page()
     header(pdf)
+    pdf.ln(HEADER_LINE_HEIGHT)
+    pdf.cell(0, txt="Generated on 2019-02-22")
+    pdf.ln(HEADER_LINE_HEIGHT)
+    pdf.cell(0, txt="for 2019-02-19 to 2019-02-21")
+    pdf.ln(HEADER_LINE_HEIGHT)
+    horizontal_line(pdf)
     # Add Driver Data
     data = [
         ("Driver Name", "Driver3 Justin"),
@@ -438,7 +450,7 @@ if __name__ == "__main__":
         ("ELD Manufacturer", "Zonar Systems"),
         ("Time Zone", "PST8PDT"),
         ("24 Period Starting Time", "00:00:00"),
-        ("Exempt Driver Status", ""),
+        ("Exempt Driver Status", "Exempt"),
         ("Carrier", "dbr47_rep1023")
     ]
     add_driver_data(data, 4)
@@ -447,17 +459,17 @@ if __name__ == "__main__":
     pdf.add_page()
     header(pdf)
     pdf.ln(HEADER_LINE_HEIGHT)
-    pdf.cell(0, txt="01/21/2019", align='R')
+    pdf.cell(0, txt="Logs for 2019-02-19", align='R')
     pdf.ln(HEADER_LINE_HEIGHT)
     horizontal_line(pdf)
-    data = [("Team Driver(s)", "")]
+    data = [("Team Driver(s)", "Albert Von Schlepptenstein")]
     add_driver_data(data, 1)
     horizontal_line(pdf)
     data = [
-        ("Shipping ID(s)", ""),
-        ("Trailer ID(s)", ""),
+        ("Shipping ID(s)", "1234"),
+        ("Trailer ID(s)", "5678"),
         ("Miles in 24 Hr Period", "0 Miles"),
-        ("CMV Power Unit", ""),
+        ("CMV Power Unit", "9012"),
     ]
     add_driver_data(data, 3)
     horizontal_line(pdf)
