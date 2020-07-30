@@ -11,13 +11,15 @@ class Item:
         self.num_per_second = 0 if crafting_time == 0 else num_created / crafting_time
         self.recipe = recipe
 
-    def analyze(self, num_per_second=1.0):
+    def analyze(self, num_needed=5):
+        num_needed / self.num_created
         if self.num_per_second == 0:
-            print("{}/s {} needed".format(num_per_second, self.name))
+            print("{:.2f}/s {} needed".format(num_per_second, self.name))
             return
-        print("{}/s {} needed ({} factories)".format(num_per_second, self.name, ceil(num_per_second / self.num_per_second)))
+        print("{:.2f}/s {} needed ({} factories)".format(num_per_second, self.name, ceil(num_per_second / self.num_per_second)))
         for item, n in self.recipe.items():
             item.analyze(self.num_per_second * n)
+
 
 # Smelted goods
 STONE_BRICK = Item("Stone brick")
@@ -41,4 +43,19 @@ ELECTRIC_INSERTER = Item("Inserter", 0.5, 1, {ELECTRIC_MOTOR: 1, BURNER_INSERTER
 FAST_INSERTER = Item("Fast inserter", 0.5, 1, {ELECTRONIC_CIRCUIT: 2, ELECTRIC_INSERTER: 1, IRON_PLATE: 2})
 
 
-ELECTRIC_MOTOR.analyze(0.8)
+MOTOR.analyze(5)
+
+"""
+5 motor per second:
+
+4x motor factories
+ - Needs 4 iron gear per second
+ - Needs 4 iron plate per second 
+
+
+
+Raw materials:
+3x iron plates per factory cycle
+15x iron plates per total factory cycle
+3.75 iron plates per second
+"""
