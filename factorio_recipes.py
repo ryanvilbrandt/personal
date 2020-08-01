@@ -69,16 +69,14 @@ class Item:
     def to_dict(d):
         return {k.name: v for k, v in d.items()}
 
-    def print(self, amount, max_name_length=None):
+    def print(self, amount, max_name_length=0):
         if self.is_raw_material:
             print(f"{self.name}: {amount}/s")
         else:
             factories = amount / self.num_per_second
             if ROUND_FACTORIES:
                 factories = ceil(factories)
-            fmt = ("{:<" + str(max_name_length + 2) + "} {} factories ({}/s)") if max_name_length else "{}: {} factories ({}/s)"
-            # print(fmt)
-            print(fmt.format(self.name, factories, amount))
+            print(("{:<" + str(max_name_length) + "}   {} factories ({}/s)").format(self.name, factories, amount))
 
 
 # Smelted goods
@@ -113,5 +111,5 @@ LOGISTIC_SCIENCE = Item("Logistic science pack", 10, 2, {TRANSPORT_BELT: 2, ELEC
 # FAST_INSERTER.analyze(1)
 
 # AUTOMATION_SCIENCE.analyze(5)
-# LOGISTIC_SCIENCE.analyze(10)
-TRANSPORT_BELT.analyze(1)
+LOGISTIC_SCIENCE.analyze(10)
+# TRANSPORT_BELT.analyze(1)
