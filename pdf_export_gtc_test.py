@@ -6,7 +6,7 @@ import requests
 config = RawConfigParser()
 config.read("inputs/zonar_credentials.ini")
 
-# url = "https://gtcdev.sea-001.zonarsystems.net/zlogs/log-export/get-pdf/"
+# URL = "https://gtcdev.sea-001.zonarsystems.net/zlogs/log-export/get-pdf/"
 # params = [
 #     ("customer", "dbr47_rep1023"),
 #     ("username", config.get("Zonar", "user")),

@@ -41,7 +41,7 @@ forms = {40: ("000YM001222222  8521988        2014021423373804010NNB000000046878
          }
 
 def SendHttpMessage(url):
-##    print url
+##    print URL
     req = urllib2.Request(url)
     res = urllib2.urlopen(req)
     return res.read()

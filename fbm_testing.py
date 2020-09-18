@@ -74,7 +74,7 @@ forms = {0: ["Python test to Clint"],
 ##forms = {10: [""]}
 
 def SendHttpMessage(url, data=None, proxy=None):
-##    print url
+##    print URL
     if not proxy == None:
         proxy_support = urllib2.ProxyHandler(proxy)
         opener = urllib2.build_opener(proxy_support)

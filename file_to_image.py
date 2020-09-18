@@ -3,7 +3,8 @@ from math import ceil, floor
 
 from PIL import Image
 
-FILE_PATH = "gallery_image.jpg"
+FILE_PATH = "filter_imei.py"
+RESIZE_RATIO = 8
 
 def safe_read(f, bytes):
     # If a read hits the end of the file, returns a null byte instead
@@ -16,8 +17,8 @@ file_size = os.stat(FILE_PATH).st_size
 print("File size:", file_size)
 pixel_count = ceil(file_size / 3)
 print("Pixel count:", pixel_count)
-width = ceil(pixel_count ** 0.5)
-height = ceil(pixel_count / width)
+width = int(ceil(pixel_count ** 0.5))
+height = int(ceil(pixel_count / width))
 print("Size:", width, "/", height)
 
 with open(FILE_PATH, 'rb') as f:
@@ -35,4 +36,6 @@ with open(FILE_PATH, 'rb') as f:
             x = 0
             y += 1
 
+    if RESIZE_RATIO != 1:
+        img = img.resize((RESIZE_RATIO * width, RESIZE_RATIO * height), Image.NEAREST)
     img.show()

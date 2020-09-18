@@ -1,8 +1,8 @@
 import sys, time
 
-MEM_ARRAY_SIZE = 128
-MEM_BITS = 64
-VERBOSE = False
+MEM_ARRAY_SIZE = 16
+MEM_BITS = 16
+VERBOSE = True
 PRINT_CHAR = True
 
 
@@ -32,9 +32,9 @@ def main(in_str):
             mem[dataptr] = (mem[dataptr] - 1) % bits_mod
         elif in_str[codeptr] == ".":
             if PRINT_CHAR:
-                sys.stdout.write(chr(mem[dataptr]))
+                print(chr(mem[dataptr]))
             else:
-                sys.stdout.write(str(mem[dataptr]))
+                print(str(mem[dataptr]))
         elif in_str[codeptr] == ",":
             req = None
             print("\nGive me one byte of input, use quotes for a char: ")
@@ -99,9 +99,9 @@ def main(in_str):
 if __name__ == "__main__":
     # in_str = "Addition ,>,[-<+>]<."
     # in_str = "Multiplication ,>,<[>[>+>+<<-]>[<+>-]<<-]>>>."
-    # in_str = "Factorial ,[->+>+<<]>>->>+<<<[>[<[->[-<<+>>>+<]>[-<+>]<<]<[->+<]>>-]<.>>>-]>>>[.-]"
+    in_str = "Factorial ,[->+>+<<]>>->>+<<<[>[<[->[-<<+>>>+<]>[-<+>]<<]<[->+<]>>-]<.>>>-]>>>[.-]"
     # in_str = "++++[.-]"
-    in_str = open('99_bottles_of_beer.brainfuck').read()
+    # in_str = open('99_bottles_of_beer.brainfuck').read()
 
 
     ##in_str = ""

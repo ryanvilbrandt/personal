@@ -75,7 +75,7 @@ def send_omi_call(url, operation):
 
     ##d = dict([(asset.attrib['id'],
     ##           dict([(k, asset.find(k).text) for k in ['tag', 'fleet', 'type', 'subtype', 'gps']]))
-    ##          for asset in xml.etree.ElementTree.parse(urllib2.urlopen(url)).getroot()])
+    ##          for asset in xml.etree.ElementTree.parse(urllib2.urlopen(URL)).getroot()])
     ##    
     ##print d
 

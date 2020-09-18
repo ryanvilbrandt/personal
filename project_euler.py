@@ -1,6 +1,6 @@
 import time
 import sieve
-import inflect
+# import inflect
 from operator import mul
 from math import sqrt, factorial
 from random import randint
@@ -449,5 +449,5 @@ with open("p067_triangle.txt") as f:
     string_0067 = f.read()
 
 t1 = time.time()
-euler_0018(string_0067)
+euler_0016()
 print("Time: {} s".format(time.time() - t1))
