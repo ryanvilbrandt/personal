@@ -39,8 +39,9 @@ def main():
     with open(found_words_filepath, 'w') as f:
         f.write("\n".join(found_words))
 
+
 if __name__ == "__main__":
-    # main()
+    main()
 
     full_dict_count = 0
     with open(dictionary_path) as f:
