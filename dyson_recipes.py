@@ -1,97 +1,11 @@
 from collections import defaultdict
 from math import ceil
 
-ROUND_FACTORIES = False
+from factorio_recipes import Item as FactorioItem
 
 
-class Item:
-
-    def __init__(self, name, crafting_time=1.0, num_created=1, recipe=None):
-        self.name = name
-        self.crafting_time = crafting_time
-        self.num_created = num_created
-        self.recipe = recipe
-        self.is_raw_material = recipe is None
-        self.num_per_second = 0.0 if self.is_raw_material else (num_created / crafting_time)
-
-    def analyze(self, factories=None, num_per_second_needed=None, ignore=None):
-        print("=======================================")
-        if num_per_second_needed is None:
-            num_per_second_needed = factories * self.num_per_second
-        if ignore is None:
-            ignore = []
-        d = self.analyze_recurse(num_per_second_needed, ignore)
-        ingredients = []
-        raw_materials = []
-        max_name_length = 0
-        print("")
-        for item, amount in d.items():
-            if item == self:
-                self.print(amount)
-            elif item.is_raw_material or item in ignore:
-                raw_materials.append((item, amount))
-            else:
-                max_name_length = max(max_name_length, len(item.name))
-                ingredients.append((item, amount))
-        if ingredients:
-            print("")
-            for item, amount in ingredients:
-                item.print(amount, max_name_length)
-        print("")
-        for item, amount in raw_materials:
-            item.print(round(amount, 5), is_raw_material=True)
-        print("")
-
-    def analyze_recurse(self, num_per_second_needed, ignore_items, indent=0):
-        print("{}{}".format("  " * indent, self.name))
-        d = defaultdict(float)
-        d[self] = float(num_per_second_needed)
-        if self.is_raw_material or self in ignore_items:
-            return d
-        for item, n in self.recipe.items():
-            item_d = item.analyze_recurse(num_per_second_needed * n, ignore_items, indent + 1)
-            # print(f"{self.name}: {self.to_dict(item_d)}")
-            for child_item, child_npsn in item_d.items():
-                d[child_item] += child_npsn / self.num_created
-            # print(f"{self.name}: {self.to_dict(item_d)}")
-        return d
-
-    def count(self, total_needed, ignore=None):
-        print("=======================================")
-        print("{}x {}".format(round(total_needed, 2), self.name))
-        print("")
-        if ignore is None:
-            ignore = []
-        count_d = self.count_recurse(total_needed, ignore)
-        print("")
-        for item, n in count_d.items():
-            print("{}x {}".format(round(n, 2), item.name))
-
-    def count_recurse(self, total_needed, ignore_items, indent=0):
-        print("{}{}".format(" " * indent, self.name))
-        if self.is_raw_material or self in ignore_items:
-            return {self: total_needed}
-        count_d = defaultdict(int)
-        for item, n in self.recipe.items():
-            d = item.count_recurse(total_needed * n, ignore_items, indent + 1)
-            for child_item, child_n in d.items():
-                count_d[child_item] += child_n / self.num_created
-        return count_d
-
-    @staticmethod
-    def to_dict(d):
-        return {k.name: v for k, v in d.items()}
-
-    def print(self, amount, max_name_length=0, indent=0, is_raw_material=False):
-        if is_raw_material:
-            print(f"{self.name}: {amount}/s")
-        else:
-            factories = amount / self.num_per_second
-            if ROUND_FACTORIES:
-                factories = ceil(factories)
-            print(("{}{:<" + str(max_name_length) + "}   {} factories ({}/s)").format(
-                "  " * indent, self.name, round(factories, 3), round(amount, 3)
-            ))
+class Item(FactorioItem):
+    default_speed = 1
 
 
 # Raw goods
