@@ -186,7 +186,7 @@ def prompt_for_input(suggested_word: str, incorrect_letters: Set[str], wrong_pos
         if status_check_result:
             c, e, i, w = status_check_result
             incorrect_letters.update(i)
-            return c, e, i, w
+            return c, e, incorrect_letters, w
 
 
 def main():
