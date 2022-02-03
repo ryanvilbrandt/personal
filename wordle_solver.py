@@ -107,12 +107,12 @@ class MostCommonPositionsStrategy(Strategy):
 def get_word_list():
     # with open("conf/scrabble_dictionary.txt") as f:
     #     return [word.strip("\n").lower() for word in f.readlines() if len(word) == 6]
-    # with open("wordle_dictionary.json") as f:
-    #     return load(f)
+    with open("wordle_dictionary.json") as f:
+        return load(f)
     # with open("lewdle_dictionary.json") as f:
     #     return load(f)
-    with open("nerdle_dictionary.json") as f:
-        return load(f)
+    # with open("nerdle_dictionary.json") as f:
+    #     return load(f)
 
 
 def get_possible_words(

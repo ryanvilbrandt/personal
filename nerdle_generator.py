@@ -3,7 +3,7 @@ from typing import List
 
 VALID_PATTERNS = ['##+#+#', '#+##+#', '#+#+##']
 CHARACTER_DICT = {
-    "#": "1234567890",
+    "#": "0123456789",
     "N": "123456789",
     "+": "+-*/"
 }
@@ -23,27 +23,21 @@ def get_all_patterns(length: int) -> List[str]:
 
 def pattern_generator(pattern_so_far: str, max_length: int) -> List[str]:
     if len(pattern_so_far) == max_length:
-        # Only allow patterns that end with #
-        if not pattern_so_far.endswith("#"):
+        # Don't allow patterns that end with +
+        if pattern_so_far.endswith("+"):
+            return []
+        # Don't allow patterns that are only digits
+        if "+" not in pattern_so_far:
             return []
         # No triple-digit or greater numbers allowed
-        if "N###" in pattern_so_far:
-            return []
+        # if "N###" in pattern_so_far:
+        #     return []
         return [pattern_so_far]
-    if pattern_so_far == "":
-        c_list = ["#", "N"]
-    elif pattern_so_far == "#" or pattern_so_far.endswith("+#"):
-        # Zeroes are only allowed as single digit numbers
-        c_list = ["+"]
-    elif pattern_so_far.endswith("+"):
-        c_list = ["#", "N"]
-    elif pattern_so_far.endswith("N"):
-        # N is only allowed at the beginning of a multi-digit number
-        c_list = ["#"]
-    elif pattern_so_far.endswith("#"):
-        c_list = ["#", "+"]
+    # Every number must start with a non-zero digit
+    if pattern_so_far == "" or pattern_so_far.endswith("+"):
+        c_list = ["N"]
     else:
-        c_list = []
+        c_list = ["+", "#"]
     new_list = []
     for c in c_list:
         new_list += pattern_generator(pattern_so_far + c, max_length)
@@ -77,15 +71,24 @@ def generate_valid_equation(pattern: str, equation_so_far: str, solution_length:
 
 def check_equation(equation: str, solution_length: int):
     try:
-        solution = str(eval(equation))
+        solution = eval(equation)
     except ZeroDivisionError:
         return None
-    if len(solution) == solution_length:
-        return solution
-    return None
+    # No negative solutions allowed
+    if solution < 0:
+        return None
+    # No solutions with fractional parts allowed
+    if solution % 1 != 0:
+        return None
+    solution = str(int(solution))
+    # Solution must fit in the remaining space
+    if len(solution) != solution_length:
+        return None
+    return solution
 
 
 equations = generate_valid_equations(8)
+print(len(equations))
 
-with open("nerdle_words.json", "w") as f:
+with open("nerdle_dictionary.json", "w") as f:
     dump(equations, f)
