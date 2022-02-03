@@ -83,7 +83,8 @@ class MostCommonPositionsStrategy(Strategy):
 
     @classmethod
     def get_ranked_word_dict(cls, word_list: List[str]) -> Dict[str, int]:
-        letter_position_counts = defaultdict(lambda: [0, 0, 0, 0, 0])
+        word_length = len(word_list[0])
+        letter_position_counts = defaultdict(lambda: [0] * word_length)
         for word in word_list:
             for i, c in enumerate(word):
                 letter_position_counts[c][i] += 1
@@ -94,7 +95,7 @@ class MostCommonPositionsStrategy(Strategy):
                 word_ranking += letter_position_counts[c][i]
             ranked_word_dict[word] = word_ranking
             # Penalize any word with repeated letters
-            if not cls.allow_duplicates and len(set(word)) < 5:
+            if not cls.allow_duplicates and len(set(word)) < word_length:
                 ranked_word_dict[word] //= 2
         return ranked_word_dict
 
@@ -103,10 +104,14 @@ class MostCommonPositionsStrategy(Strategy):
         return cls.get_suggested_word_highest(possible_words)
 
 
-def get_word_list(number_of_letters: int=5):
+def get_word_list():
     # with open("conf/scrabble_dictionary.txt") as f:
-    #     return [word.strip("\n").lower() for word in f.readlines() if len(word) == number_of_letters + 1]
-    with open("wordle_dictionary.json") as f:
+    #     return [word.strip("\n").lower() for word in f.readlines() if len(word) == 6]
+    # with open("wordle_dictionary.json") as f:
+    #     return load(f)
+    # with open("lewdle_dictionary.json") as f:
+    #     return load(f)
+    with open("nerdle_dictionary.json") as f:
         return load(f)
 
 
@@ -150,7 +155,7 @@ def print_words(possible_words, words_per_line=10, max_words=100):
 
 
 def check_status(status: str, word_input: str, wrong_positions: Dict[str, List[int]]):
-    correct_letters = ["", "", "", "", ""]
+    correct_letters = [""] * len(word_input)
     extra_letters = set()
     incorrect_letters = set()
     wrong_positions = deepcopy(wrong_positions)
@@ -180,7 +185,7 @@ def prompt_for_input(suggested_word: str, incorrect_letters: Set[str], wrong_pos
         else:
             word_input = suggested_word
         status = input("Result of each letter (y, n, m): ")
-        if len(status) != 5:
+        if len(status) != len(word_input):
             continue
         status_check_result = check_status(status, word_input, wrong_positions)
         if status_check_result:
@@ -190,42 +195,45 @@ def prompt_for_input(suggested_word: str, incorrect_letters: Set[str], wrong_pos
 
 
 def main():
-    correct_letters = ["", "", "", "", ""]
+    all_word_list = get_word_list()
+    word_list = all_word_list
+    print(len(all_word_list))
+    correct_letters = [""] * len(all_word_list[0])
     incorrect_letters = set()
     extra_letters = set()
     wrong_positions = defaultdict(list)
-    all_word_list = get_word_list(number_of_letters=5)
-    word_list = all_word_list
-    print(len(all_word_list))
     strategy = MostCommonPositionsStrategy
     strategy.allow_duplicates = False
 
-    while True:
-        possible_words = get_possible_words(
-            word_list, correct_letters, extra_letters, incorrect_letters, wrong_positions
-        )
-        if not possible_words:
-            # Something happened that caused the list of possible words to be empty. Perhaps the user guessed a word
-            # not in the previous list of possible words. This should be allowed, so we'll just rerun on the whole list.
-            print("Rerunning on list of all words")
-            print(len(all_word_list))
+    try:
+        while True:
             possible_words = get_possible_words(
-                all_word_list, correct_letters, extra_letters, incorrect_letters, wrong_positions
+                word_list, correct_letters, extra_letters, incorrect_letters, wrong_positions
             )
-        print_words(possible_words)
-        suggested_word = strategy.get_suggested_word(possible_words)
-        correct_letters, extra_letters, incorrect_letters, wrong_positions = prompt_for_input(
-            suggested_word, incorrect_letters, wrong_positions
-        )
-        if not [c for c in correct_letters if c == ""]:
-            print("")
-            print("You win!")
-            return
-        print(correct_letters)
-        print(extra_letters)
-        print(incorrect_letters)
-        print(wrong_positions)
-        word_list = possible_words
+            if not possible_words:
+                # Something happened that caused the list of possible words to be empty. Perhaps the user guessed a word
+                # not in the previous list of possible words. This should be allowed, so we'll just rerun on the whole list.
+                print("Rerunning on list of all words")
+                print(len(all_word_list))
+                possible_words = get_possible_words(
+                    all_word_list, correct_letters, extra_letters, incorrect_letters, wrong_positions
+                )
+            print_words(possible_words)
+            suggested_word = strategy.get_suggested_word(possible_words)
+            correct_letters, extra_letters, incorrect_letters, wrong_positions = prompt_for_input(
+                suggested_word, incorrect_letters, wrong_positions
+            )
+            if not [c for c in correct_letters if c == ""]:
+                print("")
+                print("You win!")
+                return
+            print(correct_letters)
+            print(extra_letters)
+            print(incorrect_letters)
+            print(wrong_positions)
+            word_list = possible_words
+    except KeyboardInterrupt:
+        pass
 
 
 if __name__ == "__main__":
