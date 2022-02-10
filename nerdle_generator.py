@@ -12,9 +12,8 @@ CHARACTER_DICT = {
 def get_all_patterns(length: int) -> List[str]:
     """
     Generates an exhaustive list of patterns that look like the left side of an arithmetic equation
-    e.g. ##+#+# which could represent an equation like 12*3-4
+    e.g. N#+N+N which could represent an equation like 12*3-4
     # = any digit, N = any digit except 0, + = any operator (+-*/)
-    Guarantees each pattern begins and ends with # and no two + are right next to each other
     :param length:
     :return:
     """
@@ -29,9 +28,6 @@ def pattern_generator(pattern_so_far: str, max_length: int) -> List[str]:
         # Don't allow patterns that are only digits
         if "+" not in pattern_so_far:
             return []
-        # No triple-digit or greater numbers allowed
-        # if "N###" in pattern_so_far:
-        #     return []
         return [pattern_so_far]
     # Every number must start with a non-zero digit
     if pattern_so_far == "" or pattern_so_far.endswith("+"):

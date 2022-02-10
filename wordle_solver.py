@@ -95,7 +95,7 @@ class MostCommonPositionsStrategy(Strategy):
                 word_ranking += letter_position_counts[c][i]
             ranked_word_dict[word] = word_ranking
             # Penalize any word with repeated letters
-            if not cls.allow_duplicates and len(set(word)) < word_length:
+            if not cls.allow_duplicates and len(set(word)) < len(word):
                 ranked_word_dict[word] //= 2
         return ranked_word_dict
 
@@ -104,15 +104,12 @@ class MostCommonPositionsStrategy(Strategy):
         return cls.get_suggested_word_highest(possible_words)
 
 
-def get_word_list():
-    # with open("conf/scrabble_dictionary.txt") as f:
-    #     return [word.strip("\n").lower() for word in f.readlines() if len(word) == 6]
-    with open("wordle_dictionary.json") as f:
-        return load(f)
-    # with open("lewdle_dictionary.json") as f:
-    #     return load(f)
-    # with open("nerdle_dictionary.json") as f:
-    #     return load(f)
+def get_word_list(dictionary_path, limit_to_letters=None):
+    with open(dictionary_path) as f:
+        if limit_to_letters:
+            return [word.strip("\n").lower() for word in f.readlines() if len(word) == limit_to_letters + 1]
+        else:
+            return load(f)
 
 
 def get_possible_words(
@@ -179,13 +176,13 @@ def prompt_for_input(suggested_word: str, incorrect_letters: Set[str], wrong_pos
         print("")
         print("Suggested word: {}".format(suggested_word))
         print("")
-        w = input("What word did you try? (blank to use suggested word): ")
-        if w != "":
-            word_input = w
-        else:
-            word_input = suggested_word
-        status = input("Result of each letter (y, n, m): ")
+        status = input("Result of each letter (y, n, m; blank to enter different word than suggested): ")
+        word_input = suggested_word
+        if status == "":
+            word_input = input("What word did you try? ")
+            status = input("Result of each letter (y, n, m): ")
         if len(status) != len(word_input):
+            print("That result doesn't match the word given. Let's try again...")
             continue
         status_check_result = check_status(status, word_input, wrong_positions)
         if status_check_result:
@@ -195,10 +192,13 @@ def prompt_for_input(suggested_word: str, incorrect_letters: Set[str], wrong_pos
 
 
 def main():
-    all_word_list = get_word_list()
-    word_list = all_word_list
-    print(len(all_word_list))
-    correct_letters = [""] * len(all_word_list[0])
+    game = "wordle"
+    # game = "lewdle"
+    # game = "nerdle"
+    word_list = get_word_list(f"{game}_dictionary.json")
+    # word_list = get_word_list("scrabble_dictionary.txt", limit_to_letters=11)
+    print(len(word_list))
+    correct_letters = [""] * len(word_list[0])
     incorrect_letters = set()
     extra_letters = set()
     wrong_positions = defaultdict(list)
@@ -210,14 +210,15 @@ def main():
             possible_words = get_possible_words(
                 word_list, correct_letters, extra_letters, incorrect_letters, wrong_positions
             )
-            if not possible_words:
-                # Something happened that caused the list of possible words to be empty. Perhaps the user guessed a word
-                # not in the previous list of possible words. This should be allowed, so we'll just rerun on the whole list.
-                print("Rerunning on list of all words")
-                print(len(all_word_list))
-                possible_words = get_possible_words(
-                    all_word_list, correct_letters, extra_letters, incorrect_letters, wrong_positions
-                )
+            # if not possible_words:
+            #     # Something happened that caused the list of possible words to be empty. Perhaps the user guessed
+            #     # a word not in the previous list of possible words. This should be allowed, so we'll just rerun on
+            #     # the whole list.
+            #     print("Rerunning on list of all words")
+            #     print(len(all_word_list))
+            #     possible_words = get_possible_words(
+            #         all_word_list, correct_letters, extra_letters, incorrect_letters, wrong_positions
+            #     )
             print_words(possible_words)
             suggested_word = strategy.get_suggested_word(possible_words)
             correct_letters, extra_letters, incorrect_letters, wrong_positions = prompt_for_input(
@@ -231,7 +232,6 @@ def main():
             print(extra_letters)
             print(incorrect_letters)
             print(wrong_positions)
-            word_list = possible_words
     except KeyboardInterrupt:
         pass
 
