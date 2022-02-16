@@ -10,7 +10,7 @@ GOOGLE_SHEETS_SERVICE_ACCOUNT = loads(os.environ["GOOGLE_SHEETS_SERVICE_ACCOUNT"
 
 
 def get_service():
-    creds = Credentials.from_service_account_file("my-workspace-340401-c4784168dec9.json")
+    creds = Credentials.from_service_account_info(GOOGLE_SHEETS_SERVICE_ACCOUNT)
     return build('sheets', 'v4', credentials=creds).spreadsheets().values()
 
 
