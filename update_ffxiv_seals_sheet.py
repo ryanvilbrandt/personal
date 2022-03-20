@@ -75,6 +75,7 @@ def process_sheet(service, sheet_name):
 def main():
     service = get_service()
     process_sheet(service, "Company Seals")
+    process_sheet(service, "Tomestones")
 
 
 if __name__ == "__main__":
