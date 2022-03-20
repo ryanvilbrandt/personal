@@ -14,9 +14,9 @@ def get_service():
     return build('sheets', 'v4', credentials=creds).spreadsheets().values()
 
 
-def get_sheet_data(service):
+def get_sheet_data(service, sheet_name):
     print("Loading Google Sheet...")
-    range = "Company Seals!A2:A"
+    range = f"{sheet_name}!A2:A"
     result = service.get(spreadsheetId=SHEET_ID, range=range).execute()
     items = []
     for row in result["values"]:
@@ -55,21 +55,26 @@ def find_sale_prices(csv_items, items_dict):
     return sale_prices
 
 
-def write_new_prices(service, sale_prices):
+def write_new_prices(service, sheet_name, sale_prices):
     body = {
         "majorDimension": "COLUMNS",
-        "range": "Company Seals!D2:D",
+        "range": f"{sheet_name}!D2:D",
         "values": [sale_prices]
     }
-    service.update(spreadsheetId=SHEET_ID, range="Company Seals!D2:D", valueInputOption="USER_ENTERED", body=body).execute()
+    service.update(spreadsheetId=SHEET_ID, range=f"{sheet_name}!D2:D",
+                   valueInputOption="USER_ENTERED", body=body).execute()
+
+
+def process_sheet(service, sheet_name):
+    items = get_sheet_data(service, sheet_name)
+    items_dict = get_item_prices(items)
+    sale_prices = find_sale_prices(items, items_dict)
+    write_new_prices(service, sheet_name, sale_prices)
 
 
 def main():
     service = get_service()
-    items = get_sheet_data(service)
-    items_dict = get_item_prices(items)
-    sale_prices = find_sale_prices(items, items_dict)
-    write_new_prices(service, sale_prices)
+    process_sheet(service, "Company Seals")
 
 
 if __name__ == "__main__":
