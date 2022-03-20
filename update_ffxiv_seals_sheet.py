@@ -16,7 +16,7 @@ def get_service():
 
 def get_sheet_data(service):
     print("Loading Google Sheet...")
-    range = "Sheet1!A2:A"
+    range = "Company Seals!A2:A"
     result = service.get(spreadsheetId=SHEET_ID, range=range).execute()
     items = []
     for row in result["values"]:
