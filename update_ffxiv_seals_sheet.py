@@ -61,7 +61,7 @@ def write_new_prices(service, sale_prices):
         "range": "Company Seals!D2:D",
         "values": [sale_prices]
     }
-    service.update(spreadsheetId=SHEET_ID, range="Sheet1!D2:D", valueInputOption="USER_ENTERED", body=body).execute()
+    service.update(spreadsheetId=SHEET_ID, range="Company Seals!D2:D", valueInputOption="USER_ENTERED", body=body).execute()
 
 
 def main():
