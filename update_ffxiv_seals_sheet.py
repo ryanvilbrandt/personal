@@ -58,7 +58,7 @@ def find_sale_prices(csv_items, items_dict):
 def write_new_prices(service, sale_prices):
     body = {
         "majorDimension": "COLUMNS",
-        "range": "Sheet1!D2:D",
+        "range": "Company Seals!D2:D",
         "values": [sale_prices]
     }
     service.update(spreadsheetId=SHEET_ID, range="Sheet1!D2:D", valueInputOption="USER_ENTERED", body=body).execute()
