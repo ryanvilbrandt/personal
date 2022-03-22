@@ -2,6 +2,7 @@ import youtube_dl
 
 # Extract audio from playlist, with auto-numbering
 ydl_opts = {
+    'cachedir': False,
     'format': 'bestaudio/best',
     'postprocessors': [{
         'key': 'FFmpegExtractAudio',
@@ -19,5 +20,5 @@ ydl_opts = {
 # }
 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     ydl.download([
-        "https://www.youtube.com/watch?v=H_zWESQPKu8"
+        "https://www.youtube.com/watch?v=z_4cEbrRwKs"
     ])
