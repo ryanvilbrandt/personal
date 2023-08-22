@@ -76,8 +76,8 @@ class PyWallpaper:
         self.root.mainloop()
 
     def read_file_list(self):
-        self.file_list = [r"\\Omega\Ryans Stuff\Pjorn\Tumblr backup\media\151821973814_0.gif"]
-        return
+        # self.file_list = [r"\\Omega\Ryans Stuff\Pjorn\Tumblr backup\media\151821973814_0.gif"]
+        # return
         if not os.path.isfile(FILE_LIST_PATH):
             self.file_list = []
         with open(FILE_LIST_PATH) as f:
