@@ -10,15 +10,17 @@ ydl_opts = {
         'preferredquality': '192',
     }],
     # "outtmpl": "%(playlist_index)s - %(title)s.%(ext)s"
-    "outtmpl": "%(title)s.%(ext)s"
+    "outtmpl": "%(title)s.%(ext)s",
+    "verbose": True
 }
 
 # Download video with subtitle
 # ydl_opts = {
 #     "writesubtitles": True,
-#     # "skip_download": True,
+#     "skip_download": True,
+#     "verbose": True,
 # }
 with youtube_dl.YoutubeDL(ydl_opts) as ydl:
     ydl.download([
-        "https://www.youtube.com/watch?v=z_4cEbrRwKs"
+        "https://www.youtube.com/watch?v=YH5YNkzl1dI",
     ])
