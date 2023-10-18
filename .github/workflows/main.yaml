@@ -5,7 +5,7 @@ on:
     branches:
       - master
   schedule:
-    - cron: '*/5 * * * *'  # Runs every 5 minutes
+    - cron: '0 * * * *'  # Runs every hour
 
 jobs:
   build:
@@ -28,7 +28,7 @@ jobs:
           pip install -r requirements.txt
       - name: Run python script(s)
         env:
-          FFXIV_SEALS_SHEET_ID: ${{ secrets.FFXIV_SEALS_SHEET_ID }}
+          FFXIV_ASUNA_SHEET_ID: ${{ secrets.FFXIV_ASUNA_SHEET_ID }}
           GOOGLE_SHEETS_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SHEETS_SERVICE_ACCOUNT }}
         run: |
-          python update_ffxiv_seals_sheet.py
+          python update_ffxiv_asuna_sheet.py
