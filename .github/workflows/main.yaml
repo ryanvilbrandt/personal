@@ -1,4 +1,4 @@
-name: Run Update FFXIV Seals Sheet script
+name: Run Update FFXIV Asuna Sheet script
 
 on:
   push:
