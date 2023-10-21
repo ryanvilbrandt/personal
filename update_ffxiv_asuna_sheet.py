@@ -1,6 +1,7 @@
 import os
 from json import loads, dumps
 from time import sleep
+from typing import List
 
 import requests
 from google.oauth2.service_account import Credentials
@@ -10,6 +11,7 @@ SHEET_ID = os.environ["FFXIV_ASUNA_SHEET_ID"]
 GOOGLE_SHEETS_SERVICE_ACCOUNT = loads(os.environ["GOOGLE_SHEETS_SERVICE_ACCOUNT"])
 WORLD = 74  # Coeurl
 items_dict = None
+ITEM_INDEX, TYPE_INDEX, PRICE_INDEX, ID_INDEX = None, None, None, None
 
 
 def get_service():
@@ -18,15 +20,21 @@ def get_service():
 
 
 def get_sheet_data(service, sheet_name):
+    global ITEM_INDEX, TYPE_INDEX, PRICE_INDEX, ID_INDEX
     print("Loading Google Sheet...")
-    range = f"{sheet_name}!A2:P"
+    range = f"{sheet_name}!A1:Q"
     result = service.get(spreadsheetId=SHEET_ID, range=range).execute()
+    header_row: List[str] = result["values"][0]
+    ITEM_INDEX = header_row.index("Item")
+    TYPE_INDEX = header_row.index("Type")
+    PRICE_INDEX = header_row.index("Universalis")
+    ID_INDEX = header_row.index("Item ID (hidden)")
     items = []
-    for row in result["values"]:
+    for row in result["values"][1:]:
         items.append({
-            "name": row[0] if len(row) >= 1 else "",
-            "type": row[5] if len(row) >= 6 else "",
-            "id": row[15] if len(row) >= 16 else ""
+            "name": row[ITEM_INDEX] if len(row) >= ITEM_INDEX + 1 else "",
+            "type": row[TYPE_INDEX] if len(row) >= TYPE_INDEX + 1 else "",
+            "id": row[ID_INDEX] if len(row) >= ID_INDEX + 1 else ""
         })
     return items
 
@@ -45,6 +53,7 @@ def fill_missing_item_ids(items):
                 item["id"] = item_id
     # print(items)
     return items
+
 
 def get_item_ids():
     global items_dict
@@ -96,20 +105,24 @@ def find_sale_prices(csv_items, universalis_dict):
 
 def write_new_prices(service, sheet_name, items):
     # Write prices
+    c = chr(ord("A") + PRICE_INDEX)
+    r = f"{sheet_name}!{c}2:{c}"
     body = {
         "majorDimension": "COLUMNS",
-        "range": f"{sheet_name}!K2:K",
+        "range": r,
         "values": [[str(item["price"]) for item in items]]
     }
-    service.update(spreadsheetId=SHEET_ID, range=f"{sheet_name}!K2:K",
+    service.update(spreadsheetId=SHEET_ID, range=r,
                    valueInputOption="USER_ENTERED", body=body).execute()
     # Write IDs
+    c = chr(ord("A") + ID_INDEX)
+    r = f"{sheet_name}!{c}2:{c}"
     body = {
         "majorDimension": "COLUMNS",
-        "range": f"{sheet_name}!P2:P",
+        "range": r,
         "values": [[item["id"] for item in items]]
     }
-    service.update(spreadsheetId=SHEET_ID, range=f"{sheet_name}!P2:P",
+    service.update(spreadsheetId=SHEET_ID, range=r,
                    valueInputOption="USER_ENTERED", body=body).execute()
 
 
