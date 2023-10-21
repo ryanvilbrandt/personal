@@ -1,5 +1,6 @@
 import os
 from json import loads, dumps
+from time import sleep
 
 import requests
 from google.oauth2.service_account import Credentials
@@ -64,11 +65,14 @@ def get_item_prices(csv_items):
     # item_ids = "6141"
     url = f"https://universalis.app/api/{WORLD}/{item_ids}?listings=1&entries=1&noGst=1&hq=nq"
     print(url)
-    response = requests.get(url)
-    # print(response)
-    # raise
-    if not response.ok:
-        raise Exception(response.content)
+    response = None
+    for _ in range(3):
+        response = requests.get(url)
+        if response.ok:
+            break
+        sleep(5)
+    else:
+        raise Exception(response.status_code, response.content)
     response_json = response.json()
     # print(dumps(response_json, indent=4))
     return {d["itemID"]: d for d in response_json["items"]}
