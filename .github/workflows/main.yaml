@@ -1,11 +1,11 @@
 name: Run Update FFXIV Asuna Sheet script
 
-on:
-  push:
-    branches:
-      - master
-  schedule:
-    - cron: '0 * * * *'  # Runs every hour
+# on:
+#   push:
+#     branches:
+#       - master
+#   schedule:
+#     - cron: '0 * * * *'  # Runs every hour
 
 jobs:
   build:
