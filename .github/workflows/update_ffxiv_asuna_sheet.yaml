@@ -1,6 +1,6 @@
 name: Run Update FFXIV Asuna Sheet script
 
-# on:
+on:
 #   push:
 #     branches:
 #       - master
