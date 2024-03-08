@@ -28,7 +28,7 @@ def get_online_player_count() -> Optional[int]:
     try:
         server = JavaServer.lookup(address)
         status = server.status()
-        print(f"The server has {status.players.online} player(s) online and replied in {status.latency} ms")
+        print(f"The server has {status.players.online} player(s) online and replied in {status.latency:.02f} ms")
         return status.players.online
     except (TimeoutError, ConnectionRefusedError):
         print("Server is not running, or didn't respond.")
