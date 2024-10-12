@@ -224,7 +224,7 @@ def main():
             correct_letters, extra_letters, incorrect_letters, wrong_positions = prompt_for_input(
                 suggested_word, incorrect_letters, wrong_positions
             )
-            if not [c for c in correct_letters if c == ""]:
+            if all(correct_letters):
                 print("")
                 print("You win!")
                 return
