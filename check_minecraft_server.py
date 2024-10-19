@@ -28,7 +28,7 @@ def main(port: int):
             if datetime.now() > last_active_player_time + timedelta(seconds=SHUTDOWN_DELAY):
                 print("Stopping minecraft server...")
                 stop_minecraft_server()
-                last_active_player_time = None
+                return
         sleep(LOOP_DELAY)
 
 
