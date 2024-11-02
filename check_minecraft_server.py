@@ -19,17 +19,20 @@ LOOP_DELAY = 30
 
 
 def main(port: int):
-    last_active_player_time = None
-    while True:
-        player_count = get_online_player_count(port)
-        if player_count is not None and player_count > 0:
-            last_active_player_time = datetime.now()
-        elif player_count == 0 and last_active_player_time:
-            if datetime.now() > last_active_player_time + timedelta(seconds=SHUTDOWN_DELAY):
-                print("Stopping minecraft server...")
-                stop_minecraft_server()
-                return
-        sleep(LOOP_DELAY)
+    last_active_player_time = datetime.now()
+    try:
+        while True:
+            player_count = get_online_player_count(port)
+            if player_count is not None and player_count > 0:
+                last_active_player_time = datetime.now()
+            elif player_count == 0 and last_active_player_time:
+                if datetime.now() > last_active_player_time + timedelta(seconds=SHUTDOWN_DELAY):
+                    print("Stopping minecraft server...")
+                    stop_minecraft_server()
+                    return
+            sleep(LOOP_DELAY)
+    except KeyboardInterrupt:
+        pass
 
 
 def get_online_player_count(port: int) -> Optional[int]:
@@ -45,7 +48,8 @@ def get_online_player_count(port: int) -> Optional[int]:
 
 
 def stop_minecraft_server():
-    subprocess.Popen(["sudo", "shutdown", "-h", "now"])
+    # subprocess.Popen(["sudo", "shutdown", "-h", "now"])
+    print(subprocess.Popen(["gcloud", "compute", "instances", "stop", "minecraft-server-spot", "--zone=us-west1-a"]))
 
 
 def parse_args():
